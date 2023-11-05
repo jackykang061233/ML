@@ -1,0 +1,54 @@
+app_config:
+    # Overview
+    package_name: "logistic"
+    
+    # Training data
+    training_data: "/data/training.csv"
+    
+log_config:
+    target: "label"
+
+    samples_to_train_ratio: 0.95
+    
+    # not used features
+    to_drop:
+        - "txkey"
+        - "chid"
+        - "cano"
+        - "mchno"
+        - "acqic"
+        - "contp"
+        - "bnsfg"
+        - "flam1"
+        - "stocn"
+        - "stscd"
+        - "flbmk"
+        - "hcefg"
+        - "flg_3dsmk"
+ 
+    
+    # For train test split
+    random_state: 42
+    test_size: 0.01
+
+    vars_with_na:
+        - "etymd"
+        - "mcc"
+        - "scity"
+        - "csmcu"
+
+    time_transform: "loctm"
+
+    features:
+        - "etymd"
+        - "mcc"
+        - "ecfg"
+        - "scity"
+        - "ovrlt"
+        - "csmcu"
+        - "locdt" 
+        - "loctm"
+        - "conam"
+        - "iterm"
+        - "csmam"
+
