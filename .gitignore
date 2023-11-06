@@ -1,3 +1,10 @@
 /credit_fraud
 /信用卡冒用/data
 /信用卡冒用/31_資料欄位說明.xlsx
+
+/信用卡冒用/tests/__pycache__
+/信用卡冒用/tests/.ipynb_checkpoints
+/信用卡冒用/logistic/config/__pycache__
+/信用卡冒用/logistic/processing
+
+
