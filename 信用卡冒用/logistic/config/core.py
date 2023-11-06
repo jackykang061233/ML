@@ -40,11 +40,16 @@ class LogConfig(BaseModel):
     smote: SmoteConfig
     logistic: LogisticRegressionConfig
 
+class MLflowConfig(BaseModel):
+    experiment_name: str
+    experiment_tags: Dict[str, str]
+
 class Config(BaseModel):
     """Master config object."""
 
     app_config: AppConfig
     log_config: LogConfig
+    mlflow_config: MLflowConfig
 
 
 def find_config_file() -> Path:
@@ -77,6 +82,7 @@ def create_and_validate_config(parsed_config: YAML = None) -> Config:
     _config = Config(
         app_config=AppConfig(**parsed_config['app_config'].data),
         log_config=LogConfig(**parsed_config['log_config'].data),
+        MLflow_config=MLflowConfig(**parsed_config['mlflow_config'].data)
     )
 
     return _config

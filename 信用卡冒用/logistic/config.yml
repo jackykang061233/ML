@@ -67,5 +67,13 @@ log_config:
         solver: "saga"
         n_jobs: -1
 
+mlflow_config:
+    experiment_name: 'logistic_with_SMOTE'
+
+    experiment_tags:
+        project_name: 'detect credit card fraud'
+        mlflow.note/content: 'This is the experiment for logistic regression'
+        
+        
     
 
