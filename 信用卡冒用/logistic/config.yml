@@ -4,11 +4,13 @@ app_config:
     
     # Training data
     training_data: "/data/training.csv"
+
+    pipeline_save_file: "logistic_regression_output_v"
     
 log_config:
     target: "label"
 
-    samples_to_train_ratio: 0.95
+    samples_to_train_ratio: 0.99
     
     # not used features
     to_drop:
@@ -51,4 +53,14 @@ log_config:
         - "conam"
         - "iterm"
         - "csmam"
+
+    # smote hyperparameters
+    smote_sampling_strategy: 0.5
+    smote_k_neighbors: 3
+
+    # logistic hyperparameters
+    logistic_max_iter: 5000
+    logistic_solver: "saga"
+
+    
 

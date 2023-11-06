@@ -9,7 +9,7 @@ PACKAGE_ROOT = Path(__file__).parent.parent
 ROOT = PACKAGE_ROOT.parent
 CONFIG_FILE_PATH = PACKAGE_ROOT / 'config.yml'
 DATASET_DIR = ROOT / 'data'
-TRAINED_MODEL_DIR = PACKAGE_ROOT / 'trained_models'
+TRAINED_MODEL_DIR = PACKAGE_ROOT / 'train_models'
 
 class AppConfig(BaseModel):
     """
@@ -17,6 +17,7 @@ class AppConfig(BaseModel):
     """
     package_name: str
     training_data: str
+    pipeline_save_file: str
 
 class LogConfig(BaseModel):
     target: str
@@ -27,6 +28,10 @@ class LogConfig(BaseModel):
     vars_with_na: List[str]
     time_transform: str
     features: List[str]
+    smote_sampling_strategy: float
+    smote_k_neighbors: int
+    logistic_max_iter: int
+    logistic_solver: str
 
 class Config(BaseModel):
     """Master config object."""

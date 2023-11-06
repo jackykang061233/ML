@@ -6,8 +6,8 @@ from sklearn.linear_model import LogisticRegression
 from imblearn.over_sampling import SMOTE
 from feature_engine.selection import DropFeatures
 
-from config.core import config
-from processing import transform_features as pp
+from logistic.config.core import config
+from logistic.processing import transform_features as pp
 
 fill_na = ColumnTransformer(
     transformers=[
@@ -25,8 +25,8 @@ pipe = Pipeline(
         ),
         ('na_values_imputation', fill_na),
         ('scaler', RobustScaler()),
-        ('SMOTE', SMOTE(sampling_strategy=0.5, k_neighbors=3)),
-        ('Logistic Regression', LogisticRegression(max_iter=5000, solver='saga', n_jobs=-1))
+        ('SMOTE', SMOTE(sampling_strategy=config.log_config.smote_sampling_strategy, k_neighbors=config.log_config.smote_k_neighbors)),
+        ('Logistic Regression', LogisticRegression(max_iter=config.log_config.logistic_max_iter, solver=config.log_config.logistic_solver, n_jobs=-1))
         
     ]
 )
