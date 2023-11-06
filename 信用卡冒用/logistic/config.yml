@@ -54,13 +54,18 @@ log_config:
         - "iterm"
         - "csmam"
 
+    
     # smote hyperparameters
-    smote_sampling_strategy: 0.5
-    smote_k_neighbors: 3
+    smote:
+        sampling_strategy: 0.5
+        k_neighbors: 3
+        
 
     # logistic hyperparameters
-    logistic_max_iter: 5000
-    logistic_solver: "saga"
+    logistic:
+        max_iter: 5000
+        solver: "saga"
+        n_jobs: -1
 
     
 

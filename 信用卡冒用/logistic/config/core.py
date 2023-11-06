@@ -11,6 +11,15 @@ CONFIG_FILE_PATH = PACKAGE_ROOT / 'config.yml'
 DATASET_DIR = ROOT / 'data'
 TRAINED_MODEL_DIR = PACKAGE_ROOT / 'train_models'
 
+class SmoteConfig(BaseModel):
+    sampling_strategy: float
+    k_neighbors: int
+
+class LogisticRegressionConfig(BaseModel):
+    max_iter: int
+    solver: str
+    n_jobs: int
+
 class AppConfig(BaseModel):
     """
     Application-level config
@@ -28,10 +37,8 @@ class LogConfig(BaseModel):
     vars_with_na: List[str]
     time_transform: str
     features: List[str]
-    smote_sampling_strategy: float
-    smote_k_neighbors: int
-    logistic_max_iter: int
-    logistic_solver: str
+    smote: SmoteConfig
+    logistic: LogisticRegressionConfig
 
 class Config(BaseModel):
     """Master config object."""

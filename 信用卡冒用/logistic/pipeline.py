@@ -25,8 +25,8 @@ pipe = Pipeline(
         ),
         ('na_values_imputation', fill_na),
         ('scaler', RobustScaler()),
-        ('SMOTE', SMOTE(sampling_strategy=config.log_config.smote_sampling_strategy, k_neighbors=config.log_config.smote_k_neighbors)),
-        ('Logistic Regression', LogisticRegression(max_iter=config.log_config.logistic_max_iter, solver=config.log_config.logistic_solver, n_jobs=-1))
+        ('SMOTE', SMOTE(**config.log_config.smote.model_dump())),
+        ('Logistic Regression', LogisticRegression(**config.log_config.logistic.model_dump()))
         
     ]
 )
