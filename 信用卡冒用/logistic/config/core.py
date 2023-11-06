@@ -88,3 +88,4 @@ def create_and_validate_config(parsed_config: YAML = None) -> Config:
     return _config
 
 config = create_and_validate_config()
+print(config)
