@@ -6,5 +6,15 @@
 /信用卡冒用/tests/.ipynb_checkpoints
 /信用卡冒用/logistic/config/__pycache__
 /信用卡冒用/logistic/processing
+/信用卡冒用/__pycache__
+/信用卡冒用/logistic/__pycache__
+
+/MLFlow
+/mlenv
+/mlruns
+/mlartifacts
+/信用卡冒用/mlruns
+
+
 
 

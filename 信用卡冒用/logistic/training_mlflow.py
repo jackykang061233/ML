@@ -1,4 +1,4 @@
-`# basic packags
+# basic packags
 import pandas as pd
 import numpy as np
 import seaborn as sns
@@ -14,6 +14,7 @@ from sklearn.model_selection import train_test_split
 
 # mlflow
 from mlflow.models.signature import infer_signature
+import mlflow
 
 from utils import accuracy, precision, recall, f1, auc
 
@@ -42,7 +43,7 @@ def train():
         mlflow.create_experiment(name=experiment_name, tags=config.mlflow_config.experiment_tags)
     mlflow.set_experiment(experiment_name)
     
-    with mlflow.start(run_name='train') as run:
+    with mlflow.start_run(run_name='train') as run:
         model = pipe.fit(X_train, y_train)
 
         predictions = model.predict(X_test)
@@ -64,8 +65,8 @@ def train():
         mlflow.log_params(config.log_config.smote.model_dump())
         mlflow.log_params(config.log_config.logistic.model_dump())
 
-        signature = infer_signature(model_input=X_train, model_output=predictions)
-        mlflow.sklearn.log_model(model, 'model', signature)
+        signature = infer_signature(X_train, model.predict(X_train) )
+        mlflow.sklearn.log_model(model, 'model', signature=signature)
                            
 
         

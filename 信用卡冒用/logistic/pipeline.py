@@ -4,7 +4,6 @@ from sklearn.preprocessing import StandardScaler, RobustScaler, OrdinalEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.linear_model import LogisticRegression
 from imblearn.over_sampling import SMOTE
-from feature_engine.selection import DropFeatures
 
 from logistic.config.core import config
 from logistic.processing import transform_features as pp

@@ -82,10 +82,9 @@ def create_and_validate_config(parsed_config: YAML = None) -> Config:
     _config = Config(
         app_config=AppConfig(**parsed_config['app_config'].data),
         log_config=LogConfig(**parsed_config['log_config'].data),
-        MLflow_config=MLflowConfig(**parsed_config['mlflow_config'].data)
+        mlflow_config=MLflowConfig(**parsed_config['mlflow_config'].data)
     )
 
     return _config
 
 config = create_and_validate_config()
-print(config)

@@ -57,8 +57,8 @@ log_config:
     
     # smote hyperparameters
     smote:
-        sampling_strategy: 0.5
-        k_neighbors: 3
+        sampling_strategy: 0.9
+        k_neighbors: 5
         
 
     # logistic hyperparameters
