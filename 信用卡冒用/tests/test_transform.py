@@ -1,4 +1,4 @@
-from logistic.processing.transform_features import TimeTransformer
+from model.processing.transform_features import TimeTransformer
 import pytest
 
 def test_time_transformer(sample_input_data):
