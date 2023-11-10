@@ -21,6 +21,8 @@ from utils import accuracy, precision, recall, f1, auc
 
 def train():
     df = pd.read_csv(str(ROOT)+config.app_config.training_data)
+    models = {'Logistic Regression': dict(config.log_config.logistic),
+          'Random Forest': dict(config.log_config.random_forest)}
 
     to_drop = config.log_config.to_drop
     target = config.log_config.target
@@ -63,7 +65,7 @@ def train():
         })
 
         mlflow.log_params(dict(config.log_config.smote))
-        mlflow.log_params(dict(config.log_config.logistic))
+        mlflow.log_params(models[config.log_config.used_model])
 
         signature = infer_signature(X_train, predictions )
         mlflow.sklearn.log_model(model, 'model', signature=signature)
