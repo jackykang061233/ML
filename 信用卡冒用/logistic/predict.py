@@ -4,38 +4,36 @@ import numpy as np
 import pandas as pd
 
 from logistic import __version__ as _version
-from logistic.config.core import config, TRAINED_MODEL_DIR
+from logistic.config.core import ROOT, config, TRAINED_MODEL_DIR
 from logistic.processing.data_manager import load_pipeline
-from utils import accuracy, precision, recall, f1, auc
 
 
-pipeline_file_name = f"{config.app_config.pipeline_save_file}{_version}.pkl"
-_pipe = load_pipeline(file_name=pipeline_file_name)
+def load_save_file(pipeline_file_name):
+    _pipe = load_pipeline(file_name=pipeline_file_name)
+    return _pipe
 
-def prediction(*, test_data: t.Union[pd.DataFrame, dict]) -> dict:
-    data = pd.DataFrame(test_data)
-    results = {"predictions": None, "version": _version}
+def make_prediction(*, pipeline_file_name: str, predict_data: t.Union[pd.DataFrame, dict]) -> dict:
+    to_drop = config.log_config.to_drop
 
-    predictions = _pipe.predict(test_data)
-    results = {"predictions": predictions, "version": _version}
-
-    return results
-
-
-def evaluation(*, test_data: t.Union[pd.DataFrame, dict], y_test: t.Union[pd.DataFrame, dict]):
-    data = pd.DataFrame(test_data)
-    results = {"predictions": None, "version": _version}
-
-    predictions = _pipe.predict(data)
+    predict_data = predict_data.drop(to_drop, axis=1)
     
-    to_write = [f'accuracy {accuracy(y_test, predictions)}', 
-                f'precision {precision(y_test, predictions)}', 
-                f'recall {recall(y_test, predictions)}', 
-                f'f1 {f1(y_test, predictions)}', 
-                f'auc {auc(y_test, predictions)}']
-    
-    to_write_path = str(TRAINED_MODEL_DIR) + '/metric/' + f"{config.app_config.pipeline_save_file}{_version}.txt"
-    with open(to_write_path, 'w') as f:
-        for w in to_write:
-            f.write(w+'\n')
+    _pipe = load_save_file(pipeline_file_name)
+    data = pd.DataFrame(predict_data)
+
+    predictions = _pipe.predict(predict_data)
+
+    return predictions
+
+def prediction(pipeline_file_name):
+    predict_data = pd.read_csv(str(ROOT)+ config.app_config.predict_path)
+
+    results = make_prediction(pipeline_file_name=pipeline_file_name, predict_data=predict_data)
+    results = pd.DataFrame({'txkey': predict_data['txkey'].values, 'pred': results})
+
+    results.to_csv(f'{str(ROOT)}/submissions/{config.app_config.pipeline_save_file}{_version}.csv', index=False)
+
+
+if __name__ == '__main__':
+    pipeline_file_name = f"{config.app_config.pipeline_save_file}{_version}.pkl"
+    prediction(pipeline_file_name)
     

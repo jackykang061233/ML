@@ -3,6 +3,7 @@ from typing import Dict, List, Optional, Sequence
 
 from pydantic import BaseModel
 from strictyaml import YAML, load
+import pydantic
 
 
 PACKAGE_ROOT = Path(__file__).parent.parent
@@ -20,6 +21,12 @@ class LogisticRegressionConfig(BaseModel):
     solver: str
     n_jobs: int
 
+class RandomForestConfig(BaseModel):
+    bootstrap: bool
+    random_state: int
+    class_weight: Dict[int, float]
+    n_jobs: int
+
 class AppConfig(BaseModel):
     """
     Application-level config
@@ -27,9 +34,11 @@ class AppConfig(BaseModel):
     package_name: str
     training_data: str
     pipeline_save_file: str
+    predict_path: str
 
 class LogConfig(BaseModel):
     target: str
+    used_model: str
     samples_to_train_ratio: float
     to_drop: List[str]
     random_state: int
@@ -39,6 +48,7 @@ class LogConfig(BaseModel):
     features: List[str]
     smote: SmoteConfig
     logistic: LogisticRegressionConfig
+    random_forest: RandomForestConfig 
 
 class MLflowConfig(BaseModel):
     experiment_name: str

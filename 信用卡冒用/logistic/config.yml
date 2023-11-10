@@ -1,16 +1,21 @@
 app_config:
     # Overview
-    package_name: "logistic"
+    package_name: "modeL-training"
     
     # Training data
     training_data: "/data/training.csv"
 
-    pipeline_save_file: "logistic_regression_output_v"
+    # pipeline_save_file: "logistic_regression_output_v"
+    pipeline_save_file: "random_forest_output_v"
+
+    predict_path: "/data/public_processed.csv"
     
 log_config:
     target: "label"
 
-    samples_to_train_ratio: 0.99
+    used_model: 'Random Forest'
+    
+    samples_to_train_ratio: 0.5
     
     # not used features
     to_drop:
@@ -31,7 +36,7 @@ log_config:
     
     # For train test split
     random_state: 42
-    test_size: 0.01
+    test_size: 0.1
 
     vars_with_na:
         - "etymd"
@@ -57,8 +62,8 @@ log_config:
     
     # smote hyperparameters
     smote:
-        sampling_strategy: 0.9
-        k_neighbors: 5
+        sampling_strategy: 0.5
+        k_neighbors: 3
         
 
     # logistic hyperparameters
@@ -67,12 +72,24 @@ log_config:
         solver: "saga"
         n_jobs: -1
 
+    # random forest hyperparameters
+    random_forest:
+        bootstrap: True
+        random_state: 42
+        class_weight: 
+            0: 1
+            1: 2
+        n_jobs: -1
+        # class_weight: 
+        #     0: 0.37
+        #     1: 99.63
+
 mlflow_config:
-    experiment_name: 'logistic_with_SMOTE'
+    experiment_name: 'random forest_with_SMOTE'
 
     experiment_tags:
         project_name: 'detect credit card fraud'
-        mlflow.note/content: 'This is the experiment for logistic regression'
+        mlflow.note/content: 'This is the experiment for random forest'
         
         
     

@@ -3,10 +3,14 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler, RobustScaler, OrdinalEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 from imblearn.over_sampling import SMOTE
 
 from logistic.config.core import config
 from logistic.processing import transform_features as pp
+
+models = {'Logistic Regression': LogisticRegression(**dict(config.log_config.logistic)),
+          'Random Forest': RandomForestClassifier(**dict(config.log_config.random_forest))}
 
 fill_na = ColumnTransformer(
     transformers=[
@@ -24,8 +28,8 @@ pipe = Pipeline(
         ),
         ('na_values_imputation', fill_na),
         ('scaler', RobustScaler()),
-        ('SMOTE', SMOTE(**config.log_config.smote.model_dump())),
-        ('Logistic Regression', LogisticRegression(**config.log_config.logistic.model_dump()))
+        ('SMOTE', SMOTE(**dict(config.log_config.smote))),
+        (config.log_config.used_model, models[config.log_config.used_model])
         
     ]
 )

@@ -6,11 +6,13 @@ import matplotlib.pyplot as plt
 
 from logistic.config.core import config, ROOT
 from logistic.pipeline import pipe
-from logistic.predict import evaluation
+from logistic.evaluate import evaluation
 from logistic.processing.data_manager import save_pipeline
 
 # scikit-learn
 from sklearn.model_selection import train_test_split
+
+from logistic import __version__ as _version
 
 
 def train():
@@ -33,9 +35,12 @@ def train():
     print(f'Testing size {len(X_test)}')
     model = pipe.fit(X_train, y_train)
     print('--------END TRAINING--------')
-    # save_pipeline(pipeline_to_save=model)
+    save_pipeline(pipeline_to_save=model)
 
-    evaluation(test_data=X_test, y_test=y_test)
+    pipeline_file_name = f"{config.app_config.pipeline_save_file}{_version}.pkl"
+    evaluation(pipeline_file_name=pipeline_file_name, test_data=X_test, y_test=y_test)
+
+    
 
 if __name__ == '__main__':
     train()

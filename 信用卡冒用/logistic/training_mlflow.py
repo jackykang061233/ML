@@ -62,10 +62,10 @@ def train():
             'auc': auc_score
         })
 
-        mlflow.log_params(config.log_config.smote.model_dump())
-        mlflow.log_params(config.log_config.logistic.model_dump())
+        mlflow.log_params(dict(config.log_config.smote))
+        mlflow.log_params(dict(config.log_config.logistic))
 
-        signature = infer_signature(X_train, model.predict(X_train) )
+        signature = infer_signature(X_train, predictions )
         mlflow.sklearn.log_model(model, 'model', signature=signature)
                            
 
