@@ -5,7 +5,7 @@ from sklearn.preprocessing import MinMaxScaler
 class TimeTransformer(BaseEstimator, TransformerMixin):
     """ Normalize time, e.g. 120000 => 0.5"""
     def __init__(self, variables: str):
-        self.time = variables
+        self.variables = variables
 
     def fit(self, X:pd.DataFrame, y:pd.Series=None):
         return self
@@ -19,9 +19,9 @@ class TimeTransformer(BaseEstimator, TransformerMixin):
             return total_seconds
             
         X = X.copy()
-        X[self.time] = X[self.time].apply(to_second)
+        X[self.variables] = X[self.variables].apply(to_second)
         scaler = MinMaxScaler()
-        X[self.time] = scaler.fit_transform(X[self.time].values.reshape(-1, 1))
+        X[self.variables] = scaler.fit_transform(X[self.variables].values.reshape(-1, 1))
         # normalized_loctm = X['normalized_loctm']
         # X.drop([self.time, 'normalized_loctm'], axis=1, inplace=True)
         # X.insert(1, self.time, normalized_loctm)

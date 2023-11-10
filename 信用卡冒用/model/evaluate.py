@@ -3,7 +3,10 @@ import typing as t
 import numpy as np
 import pandas as pd
 
+from sklearn.model_selection import StratifiedKFold, GridSearchCV
+
 from model import __version__ as _version
+from model.pipeline import pipe
 from model.config.core import config, TRAINED_MODEL_DIR
 from model.processing.data_manager import load_pipeline
 from utils import accuracy, precision, recall, f1, auc
@@ -29,3 +32,54 @@ def evaluation(*, pipeline_file_name: str, test_data: t.Union[pd.DataFrame, dict
     with open(to_write_path, 'w') as f:
         for w in to_write:
             f.write(w+'\n')
+
+def cross_validation(X_train, y_train):
+    skf = StratifiedKFold(**dict(config.cv_config.stratifiedkfold))
+    accuracy_lst = []
+    precision_lst = []
+    recall_lst = []
+    f1_lst = []
+    auc_lst = []
+
+    for train, test in skf.split(X_train, y_train):
+        model = pipe.fit(X_train.iloc[train], y_train.iloc[train])
+        predictions = model.predict(X_train.iloc[test])
+        
+        accuracy_lst.append(accuracy(y_train.iloc[test], predictions))
+        precision_lst.append(precision(y_train.iloc[test], predictions))
+        recall_lst.append(recall(y_train.iloc[test], predictions))
+        f1_lst.append(f1(y_train.iloc[test], predictions))
+        auc_lst.append(auc(y_train.iloc[test], predictions))
+
+    to_write = [f'accuracy {np.mean(accuracy_lst)}', 
+              f'precision {np.mean(precision_lst)}', 
+              f'recall {np.mean(recall_lst)}', 
+              f'f1 {np.mean(f1_lst)}', 
+              f'auc {np.mean(auc_lst)}']
+    to_write_path = str(TRAINED_MODEL_DIR) + '/metric/cv/' + f"{config.app_config.pipeline_save_file}{_version}.txt"
+    with open(to_write_path, 'w') as f:
+        for w in to_write:
+            f.write(w+'\n')
+    return model
+
+def grid_search_cv(X_train, y_train):
+    # models = {'Logistic Regression': dict(config.cv_config.logistic),
+    #           'Random Forest': dict(config.cv_config.random_forest),
+    #           'Xgboost':dict(config.cv_config.xgb)}
+    models = {'random_forest': dict(config.cv_config.random_forest),}
+
+    skf = StratifiedKFold(**dict(config.cv_config.stratifiedkfold))
+
+    grid_search = GridSearchCV(pipe, param_grid=models[config.log_config.used_model], scoring='f1', cv=skf)
+    grid_search.fit(X_train, y_train)
+    best_model = grid_search.best_estimator_
+    best_parameters = grid_search.best_params_
+
+    return best_model, best_parameters
+    
+    
+
+
+    
+    
+    

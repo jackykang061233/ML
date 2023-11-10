@@ -21,8 +21,9 @@ from utils import accuracy, precision, recall, f1, auc
 
 def train():
     df = pd.read_csv(str(ROOT)+config.app_config.training_data)
-    models = {'Logistic Regression': dict(config.log_config.logistic),
-          'Random Forest': dict(config.log_config.random_forest)}
+    models = {'logistic_regression': dict(config.log_config.logistic),
+              'random_forest': dict(config.log_config.random_forest),
+              'xgboost': dict(config.log_config.xgb)}
 
     to_drop = config.log_config.to_drop
     target = config.log_config.target
@@ -33,7 +34,10 @@ def train():
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=config.log_config.test_size, stratify=y, random_state=config.log_config.random_state)
 
     # take only partial data to train
-    X_train, _, y_train, _ = train_test_split(X_train, y_train, test_size=config.log_config.samples_to_train_ratio, stratify=y_train, random_state=config.log_config.random_state)
+    if config.log_config.samples_to_train_ratio==1:
+        pass
+    else:
+        X_train, _, y_train, _ = train_test_split(X_train, y_train, test_size=1-config.log_config.samples_to_train_ratio, stratify=y_train, random_state=config.log_config.random_state)
 
     
     print('--------START TRAINING--------')

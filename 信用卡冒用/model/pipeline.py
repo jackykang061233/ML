@@ -2,15 +2,19 @@ from imblearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler, RobustScaler, OrdinalEncoder
 from sklearn.compose import ColumnTransformer
+
+# models
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
+import xgboost as xgb
 from imblearn.over_sampling import SMOTE
 
 from model.config.core import config
 from model.processing import transform_features as pp
 
-models = {'Logistic Regression': LogisticRegression(**dict(config.log_config.logistic)),
-          'Random Forest': RandomForestClassifier(**dict(config.log_config.random_forest))}
+models = {'logistic_regression': LogisticRegression(**dict(config.log_config.logistic)),
+          'random_forest': RandomForestClassifier(**dict(config.log_config.random_forest)),
+          'xgboost': xgb.XGBClassifier(**dict(config.log_config.xgb))}
 
 fill_na = ColumnTransformer(
     transformers=[
@@ -33,3 +37,4 @@ pipe = Pipeline(
         
     ]
 )
+

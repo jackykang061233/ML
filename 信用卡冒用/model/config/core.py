@@ -1,7 +1,7 @@
 from pathlib import Path
-from typing import Dict, List, Optional, Sequence
+from typing import Dict, List, Optional, Sequence, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from strictyaml import YAML, load
 import pydantic
 
@@ -12,6 +12,18 @@ CONFIG_FILE_PATH = PACKAGE_ROOT / 'config.yml'
 DATASET_DIR = ROOT / 'data'
 TRAINED_MODEL_DIR = PACKAGE_ROOT / 'train_models'
 
+# App
+class AppConfig(BaseModel):
+    """
+    Application-level config
+    """
+    package_name: str
+    training_data: str
+    pipeline_save_file: str
+    predict_path: str
+
+
+# Model config
 class SmoteConfig(BaseModel):
     sampling_strategy: float
     k_neighbors: int
@@ -27,14 +39,10 @@ class RandomForestConfig(BaseModel):
     class_weight: Dict[int, float]
     n_jobs: int
 
-class AppConfig(BaseModel):
-    """
-    Application-level config
-    """
-    package_name: str
-    training_data: str
-    pipeline_save_file: str
-    predict_path: str
+class XgbConfig(BaseModel):
+    objective: str
+    random_state: int
+    scale_pos_weight: float
 
 class LogConfig(BaseModel):
     target: str
@@ -49,7 +57,31 @@ class LogConfig(BaseModel):
     smote: SmoteConfig
     logistic: LogisticRegressionConfig
     random_forest: RandomForestConfig 
+    xgb: XgbConfig
 
+# Cross validation
+class StratifiedKFoldConfig(BaseModel):
+    n_splits: int
+    shuffle: bool
+    random_state: int
+    
+class RandomForestGridConfig(BaseModel):
+    random_forest__criterion: List[str]
+    random_forest__n_estimators: List[int]
+    random_forest__max_depth: List[Union[None, int]]
+
+    @validator("random_forest__max_depth", pre=True, each_item=True, allow_reuse=True)
+    def convert_empty_string_to_none(cls, value):
+        if value == "":
+            return None
+        return value
+
+    
+class CVConfig(BaseModel):
+    stratifiedkfold: StratifiedKFoldConfig
+    random_forest: RandomForestGridConfig
+    
+# Mlflow        
 class MLflowConfig(BaseModel):
     experiment_name: str
     experiment_tags: Dict[str, str]
@@ -60,6 +92,7 @@ class Config(BaseModel):
     app_config: AppConfig
     log_config: LogConfig
     mlflow_config: MLflowConfig
+    cv_config: CVConfig
 
 
 def find_config_file() -> Path:
@@ -92,7 +125,8 @@ def create_and_validate_config(parsed_config: YAML = None) -> Config:
     _config = Config(
         app_config=AppConfig(**parsed_config['app_config'].data),
         log_config=LogConfig(**parsed_config['log_config'].data),
-        mlflow_config=MLflowConfig(**parsed_config['mlflow_config'].data)
+        mlflow_config=MLflowConfig(**parsed_config['mlflow_config'].data),
+        cv_config=CVConfig(**parsed_config['cv_config'].data)
     )
 
     return _config
