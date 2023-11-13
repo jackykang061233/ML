@@ -16,9 +16,38 @@ log_config:
     used_model: 'random_forest'
     
     samples_to_train_ratio: 0.01
-    
+
     # not used features
     to_drop:
+        - "flam1"
+        - "txkey"
+        - "chid"
+        - "cano"
+        - "mchno"
+        - "acqic"
+        
+    object_features:
+        - "txkey"
+        - "chid"
+        - "cano"
+        - "mchno"
+        - "acqic"
+    
+    numeric_features:
+        - "locdt"
+        - "loctm"
+        - "conam"
+        - "iterm"
+        - "csmam"
+        - "flam1"
+
+    categorical_features:
+        - "etymd"
+        - "mcc"
+        - "ecfg"
+        - "scity"
+        - "ovrlt"
+        - "csmcu"
         - "txkey"
         - "chid"
         - "cano"
@@ -26,7 +55,6 @@ log_config:
         - "acqic"
         - "contp"
         - "bnsfg"
-        - "flam1"
         - "stocn"
         - "stscd"
         - "flbmk"
@@ -43,21 +71,12 @@ log_config:
         - "mcc"
         - "scity"
         - "csmcu"
+        - "stocn"
+        - "stscd"
+        - "hcefg"
 
     time_transform: "loctm"
 
-    features:
-        - "etymd"
-        - "mcc"
-        - "ecfg"
-        - "scity"
-        - "ovrlt"
-        - "csmcu"
-        - "locdt" 
-        - "loctm"
-        - "conam"
-        - "iterm"
-        - "csmam"
         
     use_sampling: True
     

@@ -6,7 +6,7 @@ import pandas as pd
 from sklearn.model_selection import StratifiedKFold, GridSearchCV
 
 from model import __version__ as _version
-from model.pipeline import pipe
+from model.pipeline import pipeline
 from model.config.core import config, TRAINED_MODEL_DIR
 from model.processing.data_manager import load_pipeline
 from utils import accuracy, precision, recall, f1, auc
@@ -42,6 +42,7 @@ def cross_validation(X_train, y_train):
     auc_lst = []
 
     for train, test in skf.split(X_train, y_train):
+        pipe = pipeline(X_train.columns)
         model = pipe.fit(X_train.iloc[train], y_train.iloc[train])
         predictions = model.predict(X_train.iloc[test])
         
@@ -70,6 +71,7 @@ def grid_search_cv(X_train, y_train):
 
     skf = StratifiedKFold(**dict(config.cv_config.stratifiedkfold))
 
+    pipe = pipeline(X_train.columns)
     grid_search = GridSearchCV(pipe, param_grid=models[config.log_config.used_model], scoring='f1', cv=skf)
     grid_search.fit(X_train, y_train)
     best_model = grid_search.best_estimator_

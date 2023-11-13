@@ -49,11 +49,13 @@ class LogConfig(BaseModel):
     used_model: str
     samples_to_train_ratio: float
     to_drop: List[str]
+    object_features: List[str]
+    numeric_features: List[str]
+    categorical_features: List[str]
     random_state: int
     test_size: float
     vars_with_na: List[str]
     time_transform: str
-    features: List[str]
     use_sampling: bool
     smote: SmoteConfig
     logistic: LogisticRegressionConfig

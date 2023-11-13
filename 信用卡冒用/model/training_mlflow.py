@@ -5,8 +5,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 from model.config.core import config, ROOT
-from model.pipeline import pipe
-# from logistic.predict import evaluation
+from model.pipeline import pipeline
+from model.evaluate import grid_search_cv
 from model.processing.data_manager import save_pipeline
 
 # scikit-learn
@@ -50,7 +50,18 @@ def train():
     mlflow.set_experiment(experiment_name)
     
     with mlflow.start_run(run_name='train') as run:
+        models = {'logistic_regression': dict(config.log_config.logistic),
+              'random_forest': dict(config.log_config.random_forest),
+              'xgboost': dict(config.log_config.xgb)}
+
+        pipe = pipeline(X_train.columns)
         model = pipe.fit(X_train, y_train)
+
+        # get selected features' names
+        select_k_best = pipe.named_steps['feature_selection'].named_transformers_['selected_columns']
+        cols_idxs = select_k_best.get_support(indices=True)
+        # selected_columns = X_train.iloc[:,cols_idxs].columns.tolist()
+        mlflow.log_params({'selected_features': cols_idxs})
 
         predictions = model.predict(X_test)
 
@@ -68,9 +79,10 @@ def train():
             'auc': auc_score
         })
 
-        if config.log_config.sampling:
+        if config.log_config.use_sampling:
             mlflow.log_params(dict(config.log_config.smote))
         mlflow.log_params(models[config.log_config.used_model])
+        
 
         signature = infer_signature(X_train, predictions )
         mlflow.sklearn.log_model(model, 'model', signature=signature)
@@ -96,6 +108,15 @@ def train_grid_search():
     with mlflow.start_run(run_name='train') as run:
         model, params = grid_search_cv(X_train, y_train)
 
+        pipe = pipeline(X_train.columns)
+        model = pipe.fit(X_train, y_train)
+
+        # get selected features' names
+        select_k_best = pipe.named_steps['feature_selection'].named_transformers_['selected_columns']
+        cols_idxs = select_k_best.get_support(indices=True)
+        selected_columns = X_train.iloc[:,cols_idxs].columns.tolist()
+        mlflow.log_params({'selected_features': selected_columns+config.log_config.numeric_features})
+
         predictions = model.predict(X_test)
 
         accuracy_score = accuracy(y_test, predictions)
@@ -112,9 +133,9 @@ def train_grid_search():
             'auc': auc_score
         })
 
-        if config.log_config.sampling:
+        if config.log_config.use_sampling:
             mlflow.log_params(dict(config.log_config.smote))
-        mlflow.log_params(**params)
+        mlflow.log_params(params)
 
         signature = infer_signature(X_train, predictions )
         mlflow.sklearn.log_model(model, 'model', signature=signature)

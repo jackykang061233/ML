@@ -5,7 +5,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 from model.config.core import config, ROOT, TRAINED_MODEL_DIR
-from model.pipeline import pipe
+from model.pipeline import pipeline
 from model.evaluate import evaluation, cross_validation, grid_search_cv
 from model.processing.data_manager import save_pipeline
 from model import __version__ as _version
@@ -37,7 +37,9 @@ def train():
     print('--------START TRAINING--------')
     print(f'Training size {len(X_train)}')
     print(f'Testing size {len(X_test)}')
+    pipe = pipeline(X_train.columns)
     model = pipe.fit(X_train, y_train)
+
     print('--------END TRAINING--------')
     save_pipeline(pipeline_to_save=model)
 
