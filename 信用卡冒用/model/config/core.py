@@ -54,6 +54,7 @@ class LogConfig(BaseModel):
     vars_with_na: List[str]
     time_transform: str
     features: List[str]
+    use_sampling: bool
     smote: SmoteConfig
     logistic: LogisticRegressionConfig
     random_forest: RandomForestConfig 

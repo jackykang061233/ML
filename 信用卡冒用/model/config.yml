@@ -15,7 +15,7 @@ log_config:
 
     used_model: 'random_forest'
     
-    samples_to_train_ratio: 1
+    samples_to_train_ratio: 0.01
     
     # not used features
     to_drop:
@@ -58,6 +58,8 @@ log_config:
         - "conam"
         - "iterm"
         - "csmam"
+        
+    use_sampling: True
     
     # smote hyperparameters
     smote:

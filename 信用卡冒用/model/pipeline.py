@@ -23,18 +23,18 @@ fill_na = ColumnTransformer(
     remainder='passthrough'
 )
 
-pipe = Pipeline(
-    [
+steps = [
         (
             'time_transformation',
             pp.TimeTransformer(variables=config.log_config.time_transform
             ),
         ),
         ('na_values_imputation', fill_na),
-        ('scaler', RobustScaler()),
-        ('SMOTE', SMOTE(**dict(config.log_config.smote))),
-        (config.log_config.used_model, models[config.log_config.used_model])
-        
+        ('scaler', RobustScaler()),        
     ]
-)
+if config.log_config.use_sampling:
+    steps.append(('SMOTE', SMOTE(**dict(config.log_config.smote))))
+    
+steps.append((config.log_config.used_model, models[config.log_config.used_model]))
+pipe = Pipeline(steps)
 
