@@ -59,9 +59,11 @@ def train():
 
         # get selected features' names
         select_k_best = pipe.named_steps['feature_selection'].named_transformers_['selected_columns']
-        cols_idxs = select_k_best.get_support(indices=True).to_list()
-        selected_columns = [col for index, col in enumerate(config.log_config.categorical_features) if index in cols_indexs]
-        mlflow.log_params({'selected_features': selected_columns})
+        cols_idxs = select_k_best.get_support(indices=True).tolist()
+        used_categprical_features = [col for col in config.log_config.categorical_features if col not in config.log_config.to_drop]
+        selected_columns = [col for index, col in enumerate(used_categprical_features) if index in cols_idxs]
+        used_numerical_features = [col for col in config.log_config.numeric_features if col not in config.log_config.to_drop]
+        mlflow.log_params({'selected_features': selected_columns+used_numerical_features})
 
         predictions = model.predict(X_test)
 
