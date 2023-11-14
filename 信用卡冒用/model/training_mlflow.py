@@ -59,9 +59,9 @@ def train():
 
         # get selected features' names
         select_k_best = pipe.named_steps['feature_selection'].named_transformers_['selected_columns']
-        cols_idxs = select_k_best.get_support(indices=True)
-        # selected_columns = X_train.iloc[:,cols_idxs].columns.tolist()
-        mlflow.log_params({'selected_features': cols_idxs})
+        cols_idxs = select_k_best.get_support(indices=True).to_list()
+        selected_columns = [col for index, col in enumerate(config.log_config.categorical_features) if index in cols_indexs]
+        mlflow.log_params({'selected_features': selected_columns})
 
         predictions = model.predict(X_test)
 
@@ -80,8 +80,8 @@ def train():
         })
 
         if config.log_config.use_sampling:
-            mlflow.log_params(dict(config.log_config.smote))
-        mlflow.log_params(models[config.log_config.used_model])
+            mlflow.log_params({'smote': dict(config.log_config.smote)})
+        mlflow.log_params({'config.log_config.used_model': models[config.log_config.used_model]})
         
 
         signature = infer_signature(X_train, predictions )
@@ -113,9 +113,9 @@ def train_grid_search():
 
         # get selected features' names
         select_k_best = pipe.named_steps['feature_selection'].named_transformers_['selected_columns']
-        cols_idxs = select_k_best.get_support(indices=True)
-        selected_columns = X_train.iloc[:,cols_idxs].columns.tolist()
-        mlflow.log_params({'selected_features': selected_columns+config.log_config.numeric_features})
+        cols_idxs = select_k_best.get_support(indices=True).to_list()
+        selected_columns = [col for index, col in enumerate(config.log_config.categorical_features) if index in cols_indexs]
+        mlflow.log_params({'selected_features': selected_columns})
 
         predictions = model.predict(X_test)
 
@@ -134,8 +134,8 @@ def train_grid_search():
         })
 
         if config.log_config.use_sampling:
-            mlflow.log_params(dict(config.log_config.smote))
-        mlflow.log_params(params)
+            mlflow.log_params({'smote': dict(config.log_config.smote)})
+        mlflow.log_params({'config.log_config.used_model': params})
 
         signature = infer_signature(X_train, predictions )
         mlflow.sklearn.log_model(model, 'model', signature=signature)
