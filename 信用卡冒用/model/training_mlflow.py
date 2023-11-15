@@ -87,7 +87,7 @@ def train():
         
 
         signature = infer_signature(X_train, predictions )
-        mlflow.sklearn.log_model(model, 'model', signature=signature)
+        mlflow.sklearn.log_model(model, 'model', signature=signature, artifact=config.mlflow_config.artifact_path)
                            
         
     print('--------END TRAINING--------')
@@ -140,7 +140,7 @@ def train_grid_search():
         mlflow.log_params({'config.log_config.used_model': params})
 
         signature = infer_signature(X_train, predictions )
-        mlflow.sklearn.log_model(model, 'model', signature=signature)
+        mlflow.sklearn.log_model(model, 'model', signature=signature, artifact=config.mlflow_config.artifact_path)
                            
         
     print('--------END TRAINING--------')

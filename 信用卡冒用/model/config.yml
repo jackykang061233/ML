@@ -135,6 +135,8 @@ mlflow_config:
     experiment_tags:
         project_name: 'detect credit card fraud'
         mlflow.note/content: 'This is the experiment for random forest'
+
+    artifact_path: 'rf'
         
         
     

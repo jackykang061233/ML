@@ -88,6 +88,7 @@ class CVConfig(BaseModel):
 class MLflowConfig(BaseModel):
     experiment_name: str
     experiment_tags: Dict[str, str]
+    artifact_path: str
 
 class Config(BaseModel):
     """Master config object."""
