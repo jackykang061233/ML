@@ -33,6 +33,7 @@ def prediction(pipeline_file_name):
     results.to_csv(f'{str(ROOT)}/submissions/{config.app_config.pipeline_save_file}{_version}.csv', index=False)
 
 
+
 if __name__ == '__main__':
     pipeline_file_name = f"{config.app_config.pipeline_save_file}{_version}.pkl"
     prediction(pipeline_file_name)

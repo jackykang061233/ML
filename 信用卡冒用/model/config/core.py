@@ -1,13 +1,15 @@
 from pathlib import Path
 from typing import Dict, List, Optional, Sequence, Union
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, field_validator, BeforeValidator
+from typing_extensions import Annotated
 from strictyaml import YAML, load
 import pydantic
 
 
 PACKAGE_ROOT = Path(__file__).parent.parent
 ROOT = PACKAGE_ROOT.parent
+ML_ROOT = PACKAGE_ROOT.parent.parent
 CONFIG_FILE_PATH = PACKAGE_ROOT / 'config.yml'
 DATASET_DIR = ROOT / 'data'
 TRAINED_MODEL_DIR = PACKAGE_ROOT / 'train_models'
@@ -34,6 +36,7 @@ class LogisticRegressionConfig(BaseModel):
     n_jobs: int
 
 class RandomForestConfig(BaseModel):
+    n_estimators: int
     bootstrap: bool
     random_state: int
     class_weight: Dict[int, float]
@@ -43,6 +46,10 @@ class XgbConfig(BaseModel):
     objective: str
     random_state: int
     scale_pos_weight: float
+
+class LgbConfig(BaseModel):
+    random_state: int
+    n_jobs: int
 
 class LogConfig(BaseModel):
     target: str
@@ -61,24 +68,33 @@ class LogConfig(BaseModel):
     logistic: LogisticRegressionConfig
     random_forest: RandomForestConfig 
     xgb: XgbConfig
+    lgb: LgbConfig
+
+    @field_validator("to_drop", mode="before")
+    def convert_empty_string_to_none(cls, value):
+        return [] if value == [''] else value
+
 
 # Cross validation
 class StratifiedKFoldConfig(BaseModel):
     n_splits: int
     shuffle: bool
     random_state: int
+
+
+def convert_empty_string_to_none(value):
+    if value == "":
+        return None
+    return value
     
 class RandomForestGridConfig(BaseModel):
     random_forest__criterion: List[str]
     random_forest__n_estimators: List[int]
-    random_forest__max_depth: List[Union[None, int]]
-    random_forest__max_features: List[Union[str, None]]
+    # random_forest__max_depth: List[Union[None, int]]
+    random_forest__max_depth: List[Annotated[Union[None, int], BeforeValidator(convert_empty_string_to_none)]]
+    # random_forest__max_features: List[Union[str, None]]
+    random_forest__max_features: List[Annotated[Union[None, str], BeforeValidator(convert_empty_string_to_none)]]
 
-    @validator("random_forest__max_depth", "random_forest__max_features", pre=True, each_item=True, allow_reuse=True)
-    def convert_empty_string_to_none(cls, value):
-        if value == "":
-            return None
-        return value
 
     
 class CVConfig(BaseModel):

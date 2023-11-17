@@ -18,6 +18,10 @@ import mlflow
 
 from utils import accuracy, precision, recall, f1, auc
 
+models = {'logistic_regression': dict(config.log_config.logistic),
+              'random_forest': dict(config.log_config.random_forest),
+              'xgboost': dict(config.log_config.xgb)}
+
 def data_prep():
     df = pd.read_csv(str(ROOT)+config.app_config.training_data)
 
@@ -50,10 +54,6 @@ def train():
     mlflow.set_experiment(experiment_name)
     
     with mlflow.start_run(run_name='train') as run:
-        models = {'logistic_regression': dict(config.log_config.logistic),
-              'random_forest': dict(config.log_config.random_forest),
-              'xgboost': dict(config.log_config.xgb)}
-
         pipe = pipeline(X_train.columns)
         model = pipe.fit(X_train, y_train)
 
@@ -63,7 +63,8 @@ def train():
         used_categprical_features = [col for col in config.log_config.categorical_features if col not in config.log_config.to_drop]
         selected_columns = [col for index, col in enumerate(used_categprical_features) if index in cols_idxs]
         used_numerical_features = [col for col in config.log_config.numeric_features if col not in config.log_config.to_drop]
-        mlflow.log_params({'selected_features': selected_columns+used_numerical_features})
+        features = selected_columns+used_numerical_features
+        mlflow.log_params({'selected_features': features})
 
         predictions = model.predict(X_test)
 
@@ -81,13 +82,24 @@ def train():
             'auc': auc_score
         })
 
+        # if over-under sampling used then add it
         if config.log_config.use_sampling:
             mlflow.log_params({'smote': dict(config.log_config.smote)})
-        mlflow.log_params({'config.log_config.used_model': models[config.log_config.used_model]})
+            
+        # add model's parameters
+        mlflow.log_params({config.log_config.used_model: models[config.log_config.used_model]})
+        
+        # add feature importance
+        if config.log_config.used_model == 'logistic_regression':
+            importances = model.named_steps[config.log_config.used_model].coef_[0]
+        else:
+            importances = model.named_steps[config.log_config.used_model].feature_importances_
+        feature_importance = sorted([(feature, importance) for feature, importance in zip(features, importances)], key=lambda x: x[1], reverse=True)
+        mlflow.log_params({'feature importance': feature_importance})
         
 
         signature = infer_signature(X_train, predictions )
-        mlflow.sklearn.log_model(model, 'model', signature=signature, artifact=config.mlflow_config.artifact_path)
+        mlflow.sklearn.log_model(model, signature=signature, artifact_path=config.mlflow_config.artifact_path)
                            
         
     print('--------END TRAINING--------')
@@ -108,16 +120,18 @@ def train_grid_search():
     mlflow.set_experiment(experiment_name)
     
     with mlflow.start_run(run_name='train') as run:
-        model, params = grid_search_cv(X_train, y_train)
+        model, params, pipe = grid_search_cv(X_train, y_train)
 
-        pipe = pipeline(X_train.columns)
-        model = pipe.fit(X_train, y_train)
+        model = model.fit(X_train, y_train)
 
         # get selected features' names
-        select_k_best = pipe.named_steps['feature_selection'].named_transformers_['selected_columns']
-        cols_idxs = select_k_best.get_support(indices=True).to_list()
-        selected_columns = [col for index, col in enumerate(config.log_config.categorical_features) if index in cols_indexs]
-        mlflow.log_params({'selected_features': selected_columns})
+        select_k_best = model.named_steps['feature_selection'].named_transformers_['selected_columns']
+        cols_idxs = select_k_best.get_support(indices=True).tolist()
+        used_categprical_features = [col for col in config.log_config.categorical_features if col not in config.log_config.to_drop]
+        selected_columns = [col for index, col in enumerate(used_categprical_features) if index in cols_idxs]
+        used_numerical_features = [col for col in config.log_config.numeric_features if col not in config.log_config.to_drop]
+        features = selected_columns+used_numerical_features
+        mlflow.log_params({'selected_features': features})
 
         predictions = model.predict(X_test)
 
@@ -135,12 +149,24 @@ def train_grid_search():
             'auc': auc_score
         })
 
+        # if over-under sampling used then add it
         if config.log_config.use_sampling:
             mlflow.log_params({'smote': dict(config.log_config.smote)})
-        mlflow.log_params({'config.log_config.used_model': params})
+            
+        # add model's parameters
+        mlflow.log_params({config.log_config.used_model: params})
+        
+        # add feature importance
+        if config.log_config.used_model == 'logistic_regression':
+            importances = model.named_steps[config.log_config.used_model].coef_[0]
+        else:
+            importances = model.named_steps[config.log_config.used_model].feature_importances_
+        feature_importance = sorted([(feature, importance) for feature, importance in zip(features, importances)], key=lambda x: x[1], reverse=True)
+        mlflow.log_params({'feature importance': feature_importance})
+        
 
         signature = infer_signature(X_train, predictions )
-        mlflow.sklearn.log_model(model, 'model', signature=signature, artifact=config.mlflow_config.artifact_path)
+        mlflow.sklearn.log_model(model, signature=signature, artifact_path=config.mlflow_config.artifact_path)
                            
         
     print('--------END TRAINING--------')
