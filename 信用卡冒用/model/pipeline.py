@@ -18,6 +18,7 @@ def pipeline(columns):
             'random_forest': RandomForestClassifier(**dict(config.log_config.random_forest)),
             'xgboost': xgb.XGBClassifier(**dict(config.log_config.xgb))}
 
+    # fill all na values
     fill_na = ColumnTransformer(
         transformers=[
             ('fill_na', SimpleImputer(strategy="most_frequent"), config.log_config.vars_with_na)
@@ -25,6 +26,16 @@ def pipeline(columns):
         remainder='passthrough'
     )
 
+    # transform object valaues
+    # obj_columns_index = [index for index, c in enumerate(columns) if c in config.log_config.object_features and c not in config.log_config.to_drop]
+    # transform_object = ColumnTransformer(
+    #     transformers=[
+    #         ('transform_obj', OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1), obj_columns_index)
+    #     ],
+    #     remainder='passthrough'
+    # )
+
+    # select k best categorical values
     categorical_columns_index = [index for index, c in enumerate(columns) if c in config.log_config.categorical_features and c not in config.log_config.to_drop]
     with open('test.txt', 'w') as f:
         f.write(" ".join([c for index, c in enumerate(columns) if c in config.log_config.categorical_features and c not in config.log_config.to_drop]))
@@ -38,6 +49,7 @@ def pipeline(columns):
     steps = [
             ('time_transformation', pp.TimeTransformer(variables=config.log_config.time_transform)),
             ('na_values_imputation', fill_na),
+            # ('obj_transformation', transform_object),
             ('feature_selection', feature_selection),
             ('scaler', RobustScaler()),        
         ]

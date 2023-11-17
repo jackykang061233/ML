@@ -66,7 +66,7 @@ def train_grid_search():
     print(f'Training size {len(X_train)}')
     print(f'Testing size {len(X_test)}')
     model, params = grid_search_cv(X_train, y_train)
-    print(params)
+    model.fit(X_train, y_train)
     print('--------END TRAINING--------')
     save_pipeline(pipeline_to_save=model)
 

@@ -77,7 +77,7 @@ def grid_search_cv(X_train, y_train):
     best_model = grid_search.best_estimator_
     best_parameters = grid_search.best_params_
 
-    return best_model, best_parameters
+    return best_model, best_parameters, pipe
     
     
 

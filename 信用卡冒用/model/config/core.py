@@ -72,8 +72,9 @@ class RandomForestGridConfig(BaseModel):
     random_forest__criterion: List[str]
     random_forest__n_estimators: List[int]
     random_forest__max_depth: List[Union[None, int]]
+    random_forest__max_features: List[Union[str, None]]
 
-    @validator("random_forest__max_depth", pre=True, each_item=True, allow_reuse=True)
+    @validator("random_forest__max_depth", "random_forest__max_features", pre=True, each_item=True, allow_reuse=True)
     def convert_empty_string_to_none(cls, value):
         if value == "":
             return None
