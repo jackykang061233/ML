@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Dict, List, Optional, Sequence, Union
 
-from pydantic import BaseModel, field_validator, BeforeValidator
+from pydantic import BaseModel, validator
 from typing_extensions import Annotated
 from strictyaml import YAML, load
 import pydantic
@@ -70,7 +70,7 @@ class LogConfig(BaseModel):
     xgb: XgbConfig
     lgb: LgbConfig
 
-    @field_validator("to_drop", mode="before")
+    @validator("to_drop",pre=True, allow_reuse=True)
     def convert_empty_string_to_none(cls, value):
         return [] if value == [''] else value
 
@@ -81,19 +81,18 @@ class StratifiedKFoldConfig(BaseModel):
     shuffle: bool
     random_state: int
 
-
-def convert_empty_string_to_none(value):
-    if value == "":
-        return None
-    return value
     
 class RandomForestGridConfig(BaseModel):
     random_forest__criterion: List[str]
     random_forest__n_estimators: List[int]
-    # random_forest__max_depth: List[Union[None, int]]
-    random_forest__max_depth: List[Annotated[Union[None, int], BeforeValidator(convert_empty_string_to_none)]]
-    # random_forest__max_features: List[Union[str, None]]
-    random_forest__max_features: List[Annotated[Union[None, str], BeforeValidator(convert_empty_string_to_none)]]
+    random_forest__max_depth: List[Union[None, int]]
+    random_forest__max_features: List[Union[str, None]]
+
+    @validator("random_forest__max_depth", "random_forest__max_features", pre=True, each_item=True, allow_reuse=True)
+    def convert_empty_string_to_none(cls, value):
+        if value == "":
+            return None
+        return value
 
 
     

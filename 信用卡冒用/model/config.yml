@@ -95,7 +95,7 @@ log_config:
 
     # random forest hyperparameters
     random_forest:
-        n_estimators: 200
+        n_estimators: 150
         bootstrap: True
         random_state: 42
         class_weight: 
