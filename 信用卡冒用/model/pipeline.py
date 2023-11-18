@@ -65,10 +65,12 @@ def pipeline(columns):
             ('feature_selection', feature_selection),
             ('scaler', RobustScaler()),        
         ]
+    
     # if under-or oversampling is used
     if config.log_config.use_sampling:
         steps.append(('SMOTE', SMOTE(**dict(config.log_config.smote))))
-    
+
+    # train model
     steps.append((config.log_config.used_model, models[config.log_config.used_model]))
     pipe = Pipeline(steps)
     return pipe
