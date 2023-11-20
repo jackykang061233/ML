@@ -6,21 +6,22 @@ app_config:
     training_data: "/data/training.csv"
 
     # pipeline_save_file: "logistic_regression_output_v"
-    pipeline_save_file: "random_forest_output_v"
+    # pipeline_save_file: "random_forest_output_v"
+    pipeline_save_file: "lightbgm_output_v"
+    # pipeline_save_file: "lightbgm_output_v"
 
     predict_path: "/data/public_processed.csv"
     
 log_config:
     target: "label"
 
-    used_model: 'random_forest'
+    used_model: 'lightbgm'
     
     samples_to_train_ratio: 1
 
     # not used features
     to_drop: 
         -
-    # to_drop:
     #     - "flam1"
     #     - "txkey"
     #     - "chid"
@@ -84,7 +85,7 @@ log_config:
     # smote hyperparameters
     smote:
         sampling_strategy: 1
-        k_neighbors: 3
+        k_neighbors: 4
         
 
     # logistic hyperparameters
@@ -95,7 +96,7 @@ log_config:
 
     # random forest hyperparameters
     random_forest:
-        n_estimators: 300
+        n_estimators: 250
         bootstrap: True
         random_state: 42
         class_weight: 
@@ -105,9 +106,14 @@ log_config:
     xgb:
         objective: "binary:logistic"
         random_state: 42
-        scale_pos_weight: 2
+        scale_pos_weight: 1
+        learning_rate: 0.1
+        device: "cuda"
     lgb:
+        objective: 'binary'
         random_state: 42
+        device: "cpu"
+        n_estimators: 500
         n_jobs: -1
 
     
@@ -122,9 +128,8 @@ cv_config:
             - 'entropy'
             - 'log_loss'
         random_forest__n_estimators: 
-            - 50
-            - 100
             - 200
+            - 250
         random_forest__max_depth: 
             - 
             - 10 

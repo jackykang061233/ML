@@ -46,9 +46,14 @@ class XgbConfig(BaseModel):
     objective: str
     random_state: int
     scale_pos_weight: float
+    learning_rate: float
+    device: str
 
 class LgbConfig(BaseModel):
+    objective: str
     random_state: int
+    device: str
+    n_estimators: int
     n_jobs: int
 
 class LogConfig(BaseModel):
