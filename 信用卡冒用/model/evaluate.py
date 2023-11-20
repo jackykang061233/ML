@@ -80,6 +80,26 @@ def grid_search_cv(X_train, y_train):
     best_parameters = grid_search.best_params_
 
     return best_model, best_parameters, pipe
+
+def find_best_threshold(*, pipeline_file_name: str, test_data: t.Union[pd.DataFrame, dict], y_test: t.Union[pd.DataFrame, dict]):
+    _pipe = load_save_file(pipeline_file_name)
+    data = pd.DataFrame(test_data)
+
+    f1_score = []
+    prediction = _pipe.predict_proba(data)
+    thresholds = [round(x, 2) for x in np.arange(0.95, -0.05, -0.05)]
+
+    for t in thresholds:
+        predictions = np.where(prediction[:, 1]>=t, 1, 0)
+        score = f1(y_test, predictions)
+        f1_score.append(score)
+    best_score_index = np.array(f1_score).argmax()
+    best_threshold = thresholds[best_score_index]
+    return best_threshold, f1_score[best_score_index]
+        
+    
+    
+    
     
     
 

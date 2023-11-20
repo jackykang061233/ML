@@ -115,7 +115,7 @@ log_config:
         device: "cpu"
         n_estimators: 500
         n_jobs: -1
-    precision_recall_threshold: 0.9
+    precision_recall_threshold: 0.85
 
     
 cv_config:
