@@ -20,8 +20,9 @@ def make_prediction(*, pipeline_file_name: str, predict_data: t.Union[pd.DataFra
     _pipe = load_save_file(pipeline_file_name)
     data = pd.DataFrame(predict_data)
 
-    predictions = _pipe.predict(predict_data)
-
+    predictions = _pipe.predict_proba(predict_data)
+    predictions = np.where(predictions[:, 1]>=config.log_config.precision_recall_threshold, 1, 0)
+    
     return predictions
 
 def prediction(pipeline_file_name):

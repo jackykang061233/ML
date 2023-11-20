@@ -74,6 +74,7 @@ class LogConfig(BaseModel):
     random_forest: RandomForestConfig 
     xgb: XgbConfig
     lgb: LgbConfig
+    precision_recall_threshold: float
 
     @validator("to_drop",pre=True, allow_reuse=True)
     def convert_empty_string_to_none(cls, value):
@@ -110,6 +111,7 @@ class MLflowConfig(BaseModel):
     experiment_name: str
     experiment_tags: Dict[str, str]
     artifact_path: str
+    run_name: str
 
 class Config(BaseModel):
     """Master config object."""

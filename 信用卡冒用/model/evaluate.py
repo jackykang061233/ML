@@ -20,7 +20,8 @@ def evaluation(*, pipeline_file_name: str, test_data: t.Union[pd.DataFrame, dict
     _pipe = load_save_file(pipeline_file_name)
     data = pd.DataFrame(test_data)
 
-    predictions = _pipe.predict(data)
+    predictions = _pipe.predict_proba(data)
+    predictions = np.where(predictions[:, 1]>=config.log_config.precision_recall_threshold, 1, 0)
     
     to_write = [f'accuracy {accuracy(y_test, predictions)}', 
                 f'precision {precision(y_test, predictions)}', 
@@ -44,7 +45,8 @@ def cross_validation(X_train, y_train):
     for train, test in skf.split(X_train, y_train):
         pipe = pipeline(X_train.columns)
         model = pipe.fit(X_train.iloc[train], y_train.iloc[train])
-        predictions = model.predict(X_train.iloc[test])
+        predictions = model.predict_proba(X_train.iloc[test])
+        predictions = np.where(predictions[:, 1]>=config.log_config.precision_recall_threshold, 1, 0)
         
         accuracy_lst.append(accuracy(y_train.iloc[test], predictions))
         precision_lst.append(precision(y_train.iloc[test], predictions))

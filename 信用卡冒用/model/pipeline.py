@@ -19,7 +19,7 @@ def pipeline(columns):
     models = {'logistic_regression': LogisticRegression(**dict(config.log_config.logistic)),
             'random_forest': RandomForestClassifier(**dict(config.log_config.random_forest)),
             'xgboost': xgb.XGBClassifier(**dict(config.log_config.xgb)),
-            'lightbgm': LGBMClassifier(**dict(config.log_config.lgb))}
+            'lightgbm': LGBMClassifier(**dict(config.log_config.lgb))}
 
     # transform object values
     # ordinal OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)

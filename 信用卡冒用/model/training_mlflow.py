@@ -19,8 +19,9 @@ import mlflow
 from utils import accuracy, precision, recall, f1, auc
 
 models = {'logistic_regression': dict(config.log_config.logistic),
-              'random_forest': dict(config.log_config.random_forest),
-              'xgboost': dict(config.log_config.xgb)}
+          'random_forest': dict(config.log_config.random_forest),
+          'xgboost': dict(config.log_config.xgb),
+          'lightgbm': dict(config.log_config.lgb)}
 
 def data_prep():
     df = pd.read_csv(str(ROOT)+config.app_config.training_data)
@@ -41,7 +42,7 @@ def data_prep():
         
     return X_train, X_test, y_train, y_test
     
-def train():
+def train(models=models):
     X_train, X_test, y_train, y_test = data_prep()
 
     print('--------START TRAINING--------')
@@ -53,7 +54,7 @@ def train():
         mlflow.create_experiment(name=experiment_name, tags=config.mlflow_config.experiment_tags)
     mlflow.set_experiment(experiment_name)
     
-    with mlflow.start_run(run_name='train') as run:
+    with mlflow.start_run(run_name=config.mlflow_config.run_name) as run:
         pipe = pipeline(X_train.columns)
         model = pipe.fit(X_train, y_train)
 
@@ -66,7 +67,9 @@ def train():
         features = selected_columns+used_numerical_features
         mlflow.log_params({'selected_features': features})
 
-        predictions = model.predict(X_test)
+        
+        predictions = model.predict_proba(X_test)
+        predictions = np.where(predictions[:, 1]>=config.log_config.precision_recall_threshold, 1, 0)
 
         accuracy_score = accuracy(y_test, predictions)
         precision_score = precision(y_test, predictions)
@@ -107,7 +110,7 @@ def train():
 
 
 
-def train_grid_search():
+def train_grid_search(models=models):
     X_train, X_test, y_train, y_test = data_prep()
     
     print('--------START TRAINING--------')
@@ -119,7 +122,7 @@ def train_grid_search():
         mlflow.create_experiment(name=experiment_name, tags=config.mlflow_config.experiment_tags)
     mlflow.set_experiment(experiment_name)
     
-    with mlflow.start_run(run_name='train') as run:
+    with mlflow.start_run(run_name=config.mlflow_config.run_name) as run:
         model, params, pipe = grid_search_cv(X_train, y_train)
 
         model = model.fit(X_train, y_train)
@@ -133,7 +136,8 @@ def train_grid_search():
         features = selected_columns+used_numerical_features
         mlflow.log_params({'selected_features': features})
 
-        predictions = model.predict(X_test)
+        predictions = model.predict_proba(X_test)
+        predictions = np.where(predictions[:, 1]>=config.log_config.precision_recall_threshold, 1, 0)
 
         accuracy_score = accuracy(y_test, predictions)
         precision_score = precision(y_test, predictions)
