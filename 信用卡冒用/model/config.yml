@@ -7,15 +7,15 @@ app_config:
 
     # pipeline_save_file: "logistic_regression_output_v"
     # pipeline_save_file: "random_forest_output_v"
-    pipeline_save_file: "random_forest_output_v"
-    # pipeline_save_file: "lightbgm_output_v"
+    # pipeline_save_file: "xgboost_output_v"
+    pipeline_save_file: "lightbgm_output_v"
 
     predict_path: "/data/public_processed.csv"
     
 log_config:
     target: "label"
 
-    used_model: 'random_forest'
+    used_model: 'lightbgm'
     
     samples_to_train_ratio: 1
 
@@ -115,7 +115,7 @@ log_config:
         device: "cpu"
         n_estimators: 500
         n_jobs: -1
-    precision_recall_threshold: 0.4
+    precision_recall_threshold: 0.9
 
     
 cv_config:
@@ -141,15 +141,15 @@ cv_config:
         
     
 mlflow_config:
-    experiment_name: 'random_forest'
+    experiment_name: 'lightbgm'
 
     experiment_tags:
         project_name: 'detect credit card fraud'
-        mlflow.note/content: 'This is the experiment for random_forest'
+        mlflow.note/content: 'This is the experiment for lightbgm'
 
-    artifact_path: 'random_forest'
+    artifact_path: 'lightbgm'
     
-    run_name: 'train threshold 0.95'
+    run_name: 'train threshold 0.9'
         
         
     

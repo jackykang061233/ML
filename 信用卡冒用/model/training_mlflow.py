@@ -167,6 +167,8 @@ def train_grid_search(models=models):
             importances = model.named_steps[config.log_config.used_model].feature_importances_
         feature_importance = sorted([(feature, importance) for feature, importance in zip(features, importances)], key=lambda x: x[1], reverse=True)
         mlflow.log_params({'feature importance': feature_importance})
+        mlflow.log_params({'threshold': config.log_config.precision_recall_threshold})
+
         
 
         signature = infer_signature(X_train, predictions )
