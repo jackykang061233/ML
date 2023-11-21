@@ -3,7 +3,8 @@ import typing as t
 import numpy as np
 import pandas as pd
 
-from sklearn.model_selection import StratifiedKFold, GridSearchCV
+from sklearn.experimental import enable_halving_search_cv
+from sklearn.model_selection import StratifiedKFold, GridSearchCV, HalvingGridSearchCV
 
 from model import __version__ as _version
 from model.pipeline import pipeline
@@ -74,7 +75,7 @@ def grid_search_cv(X_train, y_train):
     skf = StratifiedKFold(**dict(config.cv_config.stratifiedkfold))
 
     pipe = pipeline(X_train.columns)
-    grid_search = GridSearchCV(pipe, param_grid=models[config.log_config.used_model], scoring='f1', cv=skf)
+    grid_search = HalvingGridSearchCV(pipe, param_grid=models[config.log_config.used_model], scoring='f1', cv=skf)
     grid_search.fit(X_train, y_train)
     best_model = grid_search.best_estimator_
     best_parameters = grid_search.best_params_

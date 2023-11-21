@@ -5,17 +5,21 @@ app_config:
     # Training data
     training_data: "/data/training.csv"
 
-    # pipeline_save_file: "logistic_regression_output_v"
-    # pipeline_save_file: "random_forest_output_v"
-    # pipeline_save_file: "xgboost_output_v"
-    pipeline_save_file: "lightbgm_output_v"
+    val_data: "/data/public.csv"
 
-    predict_path: "/data/public_processed.csv"
+    test_data: '/data/private_1_processed.csv'
+
+    # pipeline_save_file: "logistic_regression_output_v"
+    pipeline_save_file: "random_forest_output_v"
+    # pipeline_save_file: "xgboost_output_v"
+    #pipeline_save_file: "lightgbm_output_v"
+
+    predict_path: "/data/private_1_processed.csv"
     
 log_config:
     target: "label"
 
-    used_model: 'lightbgm'
+    used_model: 'random_forest'
     
     samples_to_train_ratio: 1
 
@@ -80,7 +84,7 @@ log_config:
 
     time_transform: "loctm"
 
-    use_sampling: True
+    use_sampling: False
     
     # smote hyperparameters
     smote:
@@ -100,8 +104,8 @@ log_config:
         bootstrap: True
         random_state: 42
         class_weight: 
-            0: 1
-            1: 1
+            0: 99.63
+            1: 0.37
         n_jobs: -1
     xgb:
         objective: "binary:logistic"
@@ -115,7 +119,8 @@ log_config:
         device: "cpu"
         n_estimators: 500
         n_jobs: -1
-    precision_recall_threshold: 0.85
+        
+    precision_recall_threshold: 0.6
 
     
 cv_config:
@@ -131,23 +136,29 @@ cv_config:
         random_forest__n_estimators: 
             - 200
             - 250
+            - 300
         random_forest__max_depth: 
             - 
             - 10 
             - 20
-        random_forest__max_features:
-            - 'sqrt'
-            - 'log2'
+        random_forest__min_samples_leaf:
+            - 1
+            - 2
+            - 4
+        random_forest__min_samples_split:
+            - 2
+            - 4
+            - 8
         
     
 mlflow_config:
-    experiment_name: 'lightbgm'
+    experiment_name: 'lightgbm'
 
     experiment_tags:
         project_name: 'detect credit card fraud'
         mlflow.note/content: 'This is the experiment for lightbgm'
 
-    artifact_path: 'lightbgm'
+    artifact_path: 'lightgbm'
     
     run_name: 'train threshold 0.9'
         

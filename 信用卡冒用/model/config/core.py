@@ -21,6 +21,8 @@ class AppConfig(BaseModel):
     """
     package_name: str
     training_data: str
+    val_data: str
+    test_data: str
     pipeline_save_file: str
     predict_path: str
 
@@ -92,16 +94,16 @@ class RandomForestGridConfig(BaseModel):
     random_forest__criterion: List[str]
     random_forest__n_estimators: List[int]
     random_forest__max_depth: List[Union[None, int]]
-    random_forest__max_features: List[Union[str, None]]
+    random_forest__min_samples_leaf: List[int]
+    random_forest__min_samples_split: List[int]
 
-    @validator("random_forest__max_depth", "random_forest__max_features", pre=True, each_item=True, allow_reuse=True)
+    @validator("random_forest__max_depth", pre=True, each_item=True, allow_reuse=True)
     def convert_empty_string_to_none(cls, value):
         if value == "":
             return None
         return value
 
 
-    
 class CVConfig(BaseModel):
     stratifiedkfold: StratifiedKFoldConfig
     random_forest: RandomForestGridConfig
