@@ -10,8 +10,8 @@ app_config:
     test_data: '/data/private_1_processed.csv'
 
     # pipeline_save_file: "logistic_regression_output_v"
-    pipeline_save_file: "random_forest_output_v"
-    # pipeline_save_file: "xgboost_output_v"
+    # pipeline_save_file: "random_forest_output_v"
+    pipeline_save_file: "xgboost_output_v"
     #pipeline_save_file: "lightgbm_output_v"
 
     predict_path: "/data/private_1_processed.csv"
@@ -19,7 +19,7 @@ app_config:
 log_config:
     target: "label"
 
-    used_model: 'random_forest'
+    used_model: 'xgboost'
     
     samples_to_train_ratio: 1
 
@@ -110,17 +110,39 @@ log_config:
     xgb:
         objective: "binary:logistic"
         random_state: 42
-        scale_pos_weight: 1
+        class_weight: 
+            0: 99.63
+            1: 0.37
+        # class_weight: 
+        #     0: 1
+        #     1: 1
+        n_estimators: 250
         learning_rate: 0.1
-        device: "cuda"
+        gamma: 0
+        reg_alpha: 0
+        reg_lambda: 0
+        max_depth: 3
+        min_child_weight: 1
+        colsample_bytree: 1
+        device: "cpu"
+        n_jobs: -1
     lgb:
         objective: 'binary'
         random_state: 42
         device: "cpu"
-        n_estimators: 500
+        n_estimators: 400
         n_jobs: -1
+        # class_weight: 
+        #     0: 99.63
+        #     1: 0.37
+        class_weight: 
+            0: 1
+            1: 1
+        learning_rate: 0.05
+        min_child_sample: 25
+
         
-    precision_recall_threshold: 0.6
+    precision_recall_threshold: 0.5
 
     
 cv_config:
@@ -149,18 +171,28 @@ cv_config:
             - 2
             - 4
             - 8
+    xgboost:
+        xgboost__learning_rate: 
+            - 0.01
+            - 0.05
+            - 0.1
+        xgboost__gamma: 0
+        xgboost__reg_alpha: 0
+        xgboost__reg_lambda: 0
+        xgboost__max_depth: 3
+        xgboost__min_child_weight: 1
         
     
 mlflow_config:
-    experiment_name: 'lightgbm'
+    experiment_name: 'xgboost'
 
     experiment_tags:
         project_name: 'detect credit card fraud'
-        mlflow.note/content: 'This is the experiment for lightbgm'
+        mlflow.note/content: 'This is the experiment for xgboost'
 
-    artifact_path: 'lightgbm'
+    artifact_path: 'xgboost'
     
-    run_name: 'train threshold 0.9'
+    run_name: 'no smote n_estimators=250'
         
         
     
