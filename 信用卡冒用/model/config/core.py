@@ -47,9 +47,17 @@ class RandomForestConfig(BaseModel):
 class XgbConfig(BaseModel):
     objective: str
     random_state: int
-    scale_pos_weight: float
+    class_weight: Dict[int, float]
+    n_estimators: int
     learning_rate: float
     device: str
+    gamma: float
+    reg_alpha: float
+    reg_lambda: float
+    max_depth: int
+    min_child_weight: int
+    colsample_bytree: float
+    n_jobs: int
 
 class LgbConfig(BaseModel):
     objective: str
@@ -57,6 +65,9 @@ class LgbConfig(BaseModel):
     device: str
     n_estimators: int
     n_jobs: int
+    class_weight: Dict[int, float]
+    learning_rate: float
+    min_child_sample: int
 
 class LogConfig(BaseModel):
     target: str
@@ -102,11 +113,21 @@ class RandomForestGridConfig(BaseModel):
         if value == "":
             return None
         return value
+    
+# class XGboostGridConfig(BaseModel):
+#     xgboost__learning_rate: 0.1
+#     xgboost__gamma: 0
+#     xgboost__reg_alpha: 0
+#     xgboost__reg_lambda: 0
+#     xgboost__max_depth: 3
+#     xgboost__min_child_weight: 1
+
 
 
 class CVConfig(BaseModel):
     stratifiedkfold: StratifiedKFoldConfig
     random_forest: RandomForestGridConfig
+    # xgboost: XGboostGridConfig
     
 # Mlflow        
 class MLflowConfig(BaseModel):

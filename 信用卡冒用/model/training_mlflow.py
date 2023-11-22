@@ -41,9 +41,25 @@ def data_prep():
         X_train, _, y_train, _ = train_test_split(X_train, y_train, test_size=1-config.log_config.samples_to_train_ratio, stratify=y_train, random_state=config.log_config.random_state)
         
     return X_train, X_test, y_train, y_test
+
+def custom_val_set():
+    df = pd.read_csv(str(ROOT)+config.app_config.training_data)
+
+    to_drop = config.log_config.to_drop
+    target = config.log_config.target
+
+    X_train = df.drop(to_drop+[target], axis=1)
+    y_train = df[target]
+
+    val = pd.read_csv(str(ROOT)+config.app_config.val_data)
+    X_test = val.drop(to_drop+[target], axis=1)
+    y_test = val[target]
+
+    return X_train, X_test, y_train, y_test
     
 def train(models=models):
     X_train, X_test, y_train, y_test = data_prep()
+    #X_train, X_test, y_train, y_test = custom_val_set()
 
     print('--------START TRAINING--------')
     print(f'Training size {len(X_train)}')
@@ -99,6 +115,7 @@ def train(models=models):
             importances = model.named_steps[config.log_config.used_model].feature_importances_
         feature_importance = sorted([(feature, importance) for feature, importance in zip(features, importances)], key=lambda x: x[1], reverse=True)
         mlflow.log_params({'feature importance': feature_importance})
+        mlflow.log_params({'threshold': config.log_config.precision_recall_threshold})
         
 
         signature = infer_signature(X_train, predictions )

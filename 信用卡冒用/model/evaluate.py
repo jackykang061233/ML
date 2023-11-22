@@ -70,7 +70,8 @@ def grid_search_cv(X_train, y_train):
     # models = {'Logistic Regression': dict(config.cv_config.logistic),
     #           'Random Forest': dict(config.cv_config.random_forest),
     #           'Xgboost':dict(config.cv_config.xgb)}
-    models = {'random_forest': dict(config.cv_config.random_forest),}
+    models = {'random_forest': dict(config.cv_config.random_forest),
+              'xgboost': dict(config.cv_config.xgboost)}
 
     skf = StratifiedKFold(**dict(config.cv_config.stratifiedkfold))
 
