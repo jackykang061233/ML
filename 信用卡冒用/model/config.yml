@@ -25,16 +25,13 @@ log_config:
 
     # not used features
     to_drop: 
-        - "flam1"
-        - "txkey"
-        - "chid"
-        - "cano"
-        - "mchno"
-        - "acqic"
-        ('txkey', 0.0053666737), ('etymd', 0.0046553747), ('stocn', 0.0037073847), 
-        ('csmcu', 0.0027951733), ('locdt', 0.0026935372), ('loctm', 0.002016966), 
-        ('acqic', 0.0016777776), ('flg_3dsmk', 0.0016678175), ('flbmk', 0.0015821188), 
-        ('iterm', 0.0010816607), ('hcefg', 0.00042349592), ('csmam', 0.0002301258), ('chid', 0.0), ('stscd', 0.0
+        - 
+        # - "flam1"
+        # - "txkey"
+        # - "chid"
+        # - "cano"
+        # - "mchno"
+        # - "acqic"
         
     object_features:
         - "txkey"
@@ -127,7 +124,7 @@ log_config:
         max_depth: 3
         min_child_weight: 1
         colsample_bytree: 1
-        device: "cpu"
+        device: "cuda"
         n_jobs: -1
     lgb:
         objective: 'binary'
@@ -175,27 +172,32 @@ cv_config:
             - 4
             - 8
     xgboost:
-        xgboost__learning_rate: 
-            - 0.1
+        # xgboost__learning_rate: 
+        #     - 0.1
         xgboost__gamma: 
             - 0
-        xgboost__reg_alpha: 
-            - 0
-        xgboost__reg_lambda: 
-            - 0
+            - 0.05
+            - 0.1
+        # xgboost__reg_alpha: 
+        #     - 0
+        # xgboost__reg_lambda: 
+        #     - 0
         xgboost__max_depth: 
             - 3
+            - 5
         xgboost__min_child_weight: 
             - 1
+            - 3
+            - 5 
         xgboost__subsample:
             - 1
+            - 0.8
+            - 0.6   
         xgboost__colsample_bytree:
             - 1
-        # max_depth：[3, 5, 6, 7, 9, 12, 15, 17, 25]
-        # min_child_weight：[1, 3, 5, 7]
-        # gamma：[0, 0.05 ~ 0.1, 0.3, 0.5, 0.7, 0.9, 1]
-        # subsample：[0.6, 0.7, 0.8, 0.9, 1]
-        # colsample_bytree：[0.6, 0.7, 0.8, 0.9, 1]       
+            - 0.8
+            - 0.6
+   
         
     
 mlflow_config:

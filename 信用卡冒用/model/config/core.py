@@ -115,10 +115,10 @@ class RandomForestGridConfig(BaseModel):
         return value
     
 class XGboostGridConfig(BaseModel):
-    xgboost__learning_rate: List[float]
+    # xgboost__learning_rate: List[float]
     xgboost__gamma: List[float]
-    xgboost__reg_alpha: List[float]
-    xgboost__reg_lambda: List[float]
+    # xgboost__reg_alpha: List[float]
+    # xgboost__reg_lambda: List[float]
     xgboost__max_depth: List[int]
     xgboost__min_child_weight: List[int]
     xgboost__subsample: List[float]

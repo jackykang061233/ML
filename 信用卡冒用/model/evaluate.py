@@ -73,7 +73,7 @@ def grid_search_cv(X_train, y_train):
     skf = StratifiedKFold(**dict(config.cv_config.stratifiedkfold))
 
     pipe = pipeline(X_train.columns)
-    grid_search = HalvingRandomSearchCV(pipe, param_grid=models[config.log_config.used_model], scoring='f1', cv=skf)
+    grid_search = HalvingRandomSearchCV(pipe, models[config.log_config.used_model], scoring='f1', cv=skf)
     grid_search.fit(X_train, y_train)
     best_model = grid_search.best_estimator_
     best_parameters = grid_search.best_params_

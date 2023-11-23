@@ -58,6 +58,22 @@ def custom_val_set():
     y_test = test[target]
 
     return X_train, X_val, X_test, y_train, y_val, y_test
+
+def public_as_val():
+    df = pd.read_csv(str(ROOT)+config.app_config.training_data)
+
+    to_drop = config.log_config.to_drop
+    target = config.log_config.target
+
+    X = df.drop(to_drop+[target], axis=1)
+    y = df[target]
+
+
+    test = pd.read_csv(str(ROOT)+config.app_config.val_data)
+    X_test = test.drop(to_drop+[target], axis=1)
+    y_test = test[target]
+
+    return X, X_test, y, y_test
     
 def train(models=models):
     X_train, X_val, X_test, y_train, y_val, y_test = custom_val_set()
