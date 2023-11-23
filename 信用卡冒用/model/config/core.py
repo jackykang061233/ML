@@ -47,7 +47,7 @@ class RandomForestConfig(BaseModel):
 class XgbConfig(BaseModel):
     objective: str
     random_state: int
-    class_weight: Dict[int, float]
+    scale_pos_weight: float
     n_estimators: int
     learning_rate: float
     device: str
@@ -57,6 +57,7 @@ class XgbConfig(BaseModel):
     max_depth: int
     min_child_weight: int
     colsample_bytree: float
+    subsample: float
     n_jobs: int
 
 class LgbConfig(BaseModel):

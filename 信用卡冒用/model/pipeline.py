@@ -54,18 +54,19 @@ def pipeline(columns):
     #     f.write(" ".join([c for index, c in enumerate(columns) if c in config.log_config.categorical_features and c not in config.log_config.to_drop]))
     feature_selection = ColumnTransformer(
         transformers=[
-            ('selected_columns', SelectKBest(chi2, k=len(config.log_config.categorical_features)), list(zip(*cat_columns))[0])
+            ('selected_columns', SelectKBest(chi2, k=len(cat_columns)), list(zip(*cat_columns))[0])
         ],
         remainder='passthrough'
     )
 
     steps = [
-            ('time_transformation', pp.TimeTransformer(variables=config.log_config.time_transform)),
             ('obj_transformation', transform_object),
             ('na_values_imputation', fill_na),
             ('feature_selection', feature_selection),
             ('scaler', RobustScaler()),        
         ]
+    if 'loctm' in columns:
+        steps.insert(0, ('time_transformation', pp.TimeTransformer(variables=config.log_config.time_transform)))
     
     # if under-or oversampling is used
     if config.log_config.use_sampling:

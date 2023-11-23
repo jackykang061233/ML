@@ -25,7 +25,23 @@ log_config:
 
     # not used features
     to_drop: 
-        - 
+        # - 
+        - 'flam1'
+        - 'txkey'
+        - 'etymd'
+        - 'stocn'
+        - 'csmcu'
+        - 'locdt'
+        - 'loctm'
+        - 'acqic'
+        # - 'flg_3dsmk'
+        # - 'flbmk'
+        # - 'iterm'
+        # - 'hcefg'
+        # - 'csmam'
+        # - 'chid'
+        # - 'stscd'
+
         # - "flam1"
         # - "txkey"
         # - "chid"
@@ -110,12 +126,7 @@ log_config:
     xgb:
         objective: "binary:logistic"
         random_state: 42
-        class_weight: 
-            0: 90
-            1: 10
-        # class_weight: 
-        #     0: 1
-        #     1: 1
+        scale_pos_weight: 3
         n_estimators: 250
         learning_rate: 0.1
         gamma: 0
@@ -125,6 +136,7 @@ log_config:
         min_child_weight: 1
         colsample_bytree: 1
         device: "cuda"
+        subsample: 1
         n_jobs: -1
     lgb:
         objective: 'binary'
@@ -172,16 +184,22 @@ cv_config:
             - 4
             - 8
     xgboost:
-        # xgboost__learning_rate: 
-        #     - 0.1
+        xgboost__learning_rate: 
+            - 0.1
+            - 0.05
         xgboost__gamma: 
             - 0
             - 0.05
             - 0.1
-        # xgboost__reg_alpha: 
-        #     - 0
-        # xgboost__reg_lambda: 
-        #     - 0
+            - 0.2
+            - 0.3
+        xgboost__reg_alpha: 
+            - 0
+            - 0.01
+            - 0.1
+        xgboost__reg_lambda: 
+            - 0
+            - 0.1
         xgboost__max_depth: 
             - 3
             - 5
@@ -197,11 +215,17 @@ cv_config:
             - 1
             - 0.8
             - 0.6
+        xgboost__n_estimators: 
+            - 100
+            - 150
+            - 200
+            - 250
+            - 300
    
         
     
 mlflow_config:
-    experiment_name: 'xgboost_gridcv'
+    experiment_name: 'xgboost'
 
     experiment_tags:
         project_name: 'detect credit card fraud'
@@ -209,8 +233,4 @@ mlflow_config:
 
     artifact_path: 'xgboost'
     
-    run_name: 'test'
-        
-        
-    
-
+    run_name: 'scale pos weight 3'

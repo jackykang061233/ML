@@ -81,18 +81,21 @@ def train():
     pipeline_file_name = f"{config.app_config.pipeline_save_file}{_version}.pkl"
     evaluation(pipeline_file_name=pipeline_file_name, test_data=X_test, y_test=y_test)
 
-def train_cross_validation():
-    X_train, X_test, y_train, y_test = data_prep()
+def train_cross_val():
+    X_train, _ , y_train, _ = data_prep()
     
     print('--------START TRAINING--------')
-    print(f'Training size {len(X_train)}')
-    print(f'Testing size {len(X_test)}')
-    model = cross_validation(X_train, y_train)
-    print('--------END TRAINING--------')
-    save_pipeline(pipeline_to_save=model)
 
-    pipeline_file_name = f"{config.app_config.pipeline_save_file}{_version}.pkl"
-    evaluation(pipeline_file_name=pipeline_file_name, test_data=X_test, y_test=y_test)
+    accuracy_lst, precision_lst, recall_lst, f1_lst, auc_lst = cross_validation(X_train, y_train)
+        
+    print('--------END TRAINING--------')
+    fig, ax = plt.subplots(1, 5, figsize=(25, 5))
+    ax[0].plot(accuracy_lst)
+    ax[1].plot(precision_lst)
+    ax[2].plot(recall_lst)
+    ax[3].plot(f1_lst)
+    ax[4].plot(auc_lst)
+    plt.show()
 
 def train_grid_search():
     #X_train, X_test, y_train, y_test = data_prep()
