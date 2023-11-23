@@ -23,6 +23,7 @@ def pipeline(columns):
 
     # transform object values
     # ordinal OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)
+    # target  TargetEncoder(target_type='binary', random_state=42)
     obj_columns = [(index, c) for index, c in enumerate(columns) if c in config.log_config.categorical_features]
     transform_object = ColumnTransformer(
         transformers=[

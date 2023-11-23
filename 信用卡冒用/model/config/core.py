@@ -114,20 +114,22 @@ class RandomForestGridConfig(BaseModel):
             return None
         return value
     
-# class XGboostGridConfig(BaseModel):
-#     xgboost__learning_rate: 0.1
-#     xgboost__gamma: 0
-#     xgboost__reg_alpha: 0
-#     xgboost__reg_lambda: 0
-#     xgboost__max_depth: 3
-#     xgboost__min_child_weight: 1
+class XGboostGridConfig(BaseModel):
+    xgboost__learning_rate: List[float]
+    xgboost__gamma: List[float]
+    xgboost__reg_alpha: List[float]
+    xgboost__reg_lambda: List[float]
+    xgboost__max_depth: List[int]
+    xgboost__min_child_weight: List[int]
+    xgboost__subsample: List[float]
+    xgboost__colsample_bytree: List[float]
 
 
 
 class CVConfig(BaseModel):
     stratifiedkfold: StratifiedKFoldConfig
     random_forest: RandomForestGridConfig
-    # xgboost: XGboostGridConfig
+    xgboost: XGboostGridConfig
     
 # Mlflow        
 class MLflowConfig(BaseModel):

@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 from sklearn.experimental import enable_halving_search_cv
-from sklearn.model_selection import StratifiedKFold, GridSearchCV, HalvingGridSearchCV
+from sklearn.model_selection import StratifiedKFold, HalvingGridSearchCV, HalvingRandomSearchCV
 
 from model import __version__ as _version
 from model.pipeline import pipeline
@@ -64,19 +64,16 @@ def cross_validation(X_train, y_train):
     with open(to_write_path, 'w') as f:
         for w in to_write:
             f.write(w+'\n')
-    return model
+    return accuracy_lst, precision_lst, recall_lst, f1_lst, auc_lst
 
 def grid_search_cv(X_train, y_train):
-    # models = {'Logistic Regression': dict(config.cv_config.logistic),
-    #           'Random Forest': dict(config.cv_config.random_forest),
-    #           'Xgboost':dict(config.cv_config.xgb)}
     models = {'random_forest': dict(config.cv_config.random_forest),
               'xgboost': dict(config.cv_config.xgboost)}
 
     skf = StratifiedKFold(**dict(config.cv_config.stratifiedkfold))
 
     pipe = pipeline(X_train.columns)
-    grid_search = HalvingGridSearchCV(pipe, param_grid=models[config.log_config.used_model], scoring='f1', cv=skf)
+    grid_search = HalvingRandomSearchCV(pipe, param_grid=models[config.log_config.used_model], scoring='f1', cv=skf)
     grid_search.fit(X_train, y_train)
     best_model = grid_search.best_estimator_
     best_parameters = grid_search.best_params_
