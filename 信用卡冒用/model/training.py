@@ -48,8 +48,8 @@ def custom_val_set():
     return X_train, X_test, y_train, y_test
     
 def train():
-    #X_train, X_test, y_train, y_test = custom_val_set()
-    X_train, X_test, y_train, y_test = data_prep()
+    X_train, X_test, y_train, y_test = custom_val_set()
+    #X_train, X_test, y_train, y_test = data_prep()
 
     print('--------START TRAINING--------')
     print(f'Training size {len(X_train)}')
