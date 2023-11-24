@@ -79,5 +79,5 @@ def pipeline(columns):
     steps.append((config.log_config.used_model, models[config.log_config.used_model]))
     pipe = Pipeline(steps)
     
-    return pipe, new_order_columns
+    return pipe
 

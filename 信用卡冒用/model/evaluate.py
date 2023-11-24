@@ -95,6 +95,28 @@ def find_best_threshold(*, pipeline_file_name: str, test_data: t.Union[pd.DataFr
     best_score_index = np.array(f1_score).argmax()
     best_threshold = thresholds[best_score_index]
     return best_threshold, f1_score[best_score_index]
+
+# def self_grid_search(X_train, y_train, X_val, y_val):
+#     cv = StratifiedKFold(n_splits = 5,
+#                         shuffle = True,
+#                         random_state = 123)
+#     adv_scores = []
+#     for i, (train_val, test_val) in enumerate(cv.split(X,y)):
+#         X_train, X_test = X.iloc[train_val], X.iloc[test_val]
+#         y_train, y_test = y.iloc[train_val], y.iloc[test_val]
+
+#         pipe, o = pipeline(X.columns)
+#         pipe = pipe[:-1]
+#         new_X_train = pipe.fit_transform(X_train, y_train)
+#         xgb_model.fit(new_X_train, y_train)
+#         new_X_test = pipe.transform(X_test)
+        
+#         y_pred = xgb_model.predict_proba(new_X_test)[:,1]
+#         score = roc_auc_score(y_test, y_pred)
+#         adv_scores.append(score)
+        
+        
+
         
     
     
