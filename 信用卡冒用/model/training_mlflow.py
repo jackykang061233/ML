@@ -242,7 +242,7 @@ def train_grid_search():
     print('--------END TRAINING--------')
     save_pipeline(pipeline_to_save=model)
 
-def train_cross_val():
+def train_cross_val(models=models):
     X_train, _ , y_train, _ = data_prep()
     
     print('--------START TRAINING--------')
@@ -269,6 +269,9 @@ def train_cross_val():
             'f1': f1_score, 
             'auc': auc_score
         })
+        mlflow.log_params({config.log_config.used_model: models[config.log_config.used_model]})
+        mlflow.log_params({'cv detail': dict(config.cv_config.stratifiedkfold)})
+
 
         
     print('--------END TRAINING--------')

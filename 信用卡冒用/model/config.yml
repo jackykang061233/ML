@@ -26,21 +26,21 @@ log_config:
     # not used features
     to_drop: 
         # - 
-        - 'flam1'
-        - 'txkey'
-        - 'etymd'
-        - 'stocn'
-        - 'csmcu'
-        - 'locdt'
-        - 'loctm'
+        # - 'flam1'
+        # - 'txkey'
+        # - 'etymd'
+        # - 'stocn'
+        # - 'csmcu'
+        # - 'locdt'
+        # - 'loctm'
         - 'acqic'
-        # - 'flg_3dsmk'
-        # - 'flbmk'
-        # - 'iterm'
-        # - 'hcefg'
-        # - 'csmam'
-        # - 'chid'
-        # - 'stscd'
+        - 'flg_3dsmk'
+        - 'flbmk'
+        - 'iterm'
+        - 'hcefg'
+        - 'csmam'
+        - 'chid'
+        - 'stscd'
 
         # - "flam1"
         # - "txkey"
@@ -129,20 +129,35 @@ log_config:
         scale_pos_weight: 3
         n_estimators: 250
         learning_rate: 0.1
-        gamma: 0
+        gamma: 0.05
         reg_alpha: 0
         reg_lambda: 0
-        max_depth: 3
-        min_child_weight: 1
+        max_depth: 5
+        min_child_weight: 3
         colsample_bytree: 1
         device: "cuda"
-        subsample: 1
+        subsample: 0.6
         n_jobs: -1
+        # objective: "binary:logistic"
+        # random_state: 42
+        # scale_pos_weight: 3
+        # subsample: 0.8
+        # reg_lambda: 0.0
+        # reg_alpha: 0.01
+        # n_estimators: 150
+        # min_child_weight: 1
+        # max_depth: 3
+        # learning_rate: 0.05
+        # gamma: 0.05
+        # colsample_bytree: 1
+        # device: "cuda"
+        # n_jobs: -1
+
     lgb:
         objective: 'binary'
         random_state: 42
         device: "cpu"
-        n_estimators: 400
+        n_estimators: 200
         n_jobs: -1
         # class_weight: 
         #     0: 99
@@ -161,7 +176,7 @@ cv_config:
     stratifiedkfold:
         n_splits: 5
         shuffle: True
-        random_state: 42
+        random_state: 40
     random_forest:
         random_forest__criterion: 
             - 'gini'
@@ -225,7 +240,7 @@ cv_config:
         
     
 mlflow_config:
-    experiment_name: 'xgboost'
+    experiment_name: 'xgboost_cv'
 
     experiment_tags:
         project_name: 'detect credit card fraud'
@@ -233,4 +248,5 @@ mlflow_config:
 
     artifact_path: 'xgboost'
     
-    run_name: 'scale pos weight 3'
+    run_name: 'n_estimators=200'
+

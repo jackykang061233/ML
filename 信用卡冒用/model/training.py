@@ -89,13 +89,13 @@ def train_cross_val():
     accuracy_lst, precision_lst, recall_lst, f1_lst, auc_lst = cross_validation(X_train, y_train)
         
     print('--------END TRAINING--------')
-    fig, ax = plt.subplots(1, 5, figsize=(25, 5))
-    ax[0].plot(accuracy_lst)
-    ax[1].plot(precision_lst)
-    ax[2].plot(recall_lst)
-    ax[3].plot(f1_lst)
-    ax[4].plot(auc_lst)
-    plt.show()
+    # fig, ax = plt.subplots(1, 5, figsize=(25, 5))
+    # ax[0].plot(accuracy_lst)
+    # ax[1].plot(precision_lst)
+    # ax[2].plot(recall_lst)
+    # ax[3].plot(f1_lst)
+    # ax[4].plot(auc_lst)
+    # plt.show()
 
 def train_grid_search():
     #X_train, X_test, y_train, y_test = data_prep()
@@ -120,4 +120,3 @@ def train_grid_search():
 
 if __name__ == '__main__':
     train()
-
