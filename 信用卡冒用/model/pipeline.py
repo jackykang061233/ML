@@ -58,6 +58,9 @@ def pipeline(columns):
         ],
         remainder='passthrough'
     )
+    cat_columns_names = list(list(zip(*cat_columns))[1])
+    new_order_columns = [c for c in new_order_columns if c not in cat_columns_names]
+    new_order_columns = cat_columns_names + new_order_columns
 
     steps = [
             ('obj_transformation', transform_object),
@@ -75,5 +78,6 @@ def pipeline(columns):
     # train model
     steps.append((config.log_config.used_model, models[config.log_config.used_model]))
     pipe = Pipeline(steps)
-    return pipe
+    
+    return pipe, new_order_columns
 
