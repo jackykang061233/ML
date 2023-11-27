@@ -153,6 +153,7 @@ log_config:
         # objective: "binary:logistic"
         # random_state: 42
         # scale_pos_weight: 3
+        
         # objective: "binary:logistic"
         # random_state: 42
         # scale_pos_weight: 3
