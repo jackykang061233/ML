@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import MinMaxScaler
+import numpy as np
 
 class TimeTransformer(BaseEstimator, TransformerMixin):
     """ Normalize time, e.g. 120000 => 0.5"""
@@ -26,6 +27,20 @@ class TimeTransformer(BaseEstimator, TransformerMixin):
         # X.drop([self.time, 'normalized_loctm'], axis=1, inplace=True)
         # X.insert(1, self.time, normalized_loctm)
 
+        return X
+    
+class NewNAColumn(BaseEstimator, TransformerMixin):
+    """ create new column for na value which indicates if it is na 1 for nan value 0 for not nan value"""
+    def __init__(self, col):
+        self.col = col
+        
+    def fit(self, X=None, y=None):
+        return self
+    
+    def transform(self, X, y=None):
+        for col in self.col:
+            X[col+'_na'] = np.where(X[col].isnull(), 1, 0)
+            X[col] = X[col].fillna(X[col].nunique())
         return X
 
         

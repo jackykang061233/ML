@@ -82,6 +82,7 @@ class LogConfig(BaseModel):
     test_size: float
     vars_with_na: List[str]
     time_transform: str
+    add_na_column: List[str]
     use_sampling: bool
     smote: SmoteConfig
     logistic: LogisticRegressionConfig
@@ -90,7 +91,7 @@ class LogConfig(BaseModel):
     lgb: LgbConfig
     precision_recall_threshold: float
 
-    @validator("to_drop",pre=True, allow_reuse=True)
+    @validator("to_drop", 'vars_with_na', 'add_na_column', pre=True, allow_reuse=True)
     def convert_empty_string_to_none(cls, value):
         return [] if value == [''] else value
 

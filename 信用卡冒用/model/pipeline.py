@@ -68,8 +68,12 @@ def pipeline(columns):
             ('feature_selection', feature_selection),
             ('scaler', RobustScaler()),        
         ]
-    if 'loctm' in columns:
+    if config.log_config.time_transform in columns:
         steps.insert(0, ('time_transformation', pp.TimeTransformer(variables=config.log_config.time_transform)))
+    
+    common_add_na_col = list(set(config.log_config.add_na_column).intersection(set(columns)))
+    if common_add_na_col:
+        steps.insert(0, ('add_na_column', pp.NewNAColumn(col=common_add_na_col)))
     
     # if under-or oversampling is used
     if config.log_config.use_sampling:

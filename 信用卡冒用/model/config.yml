@@ -21,11 +21,14 @@ log_config:
 
     used_model: 'xgboost'
     
-    samples_to_train_ratio: 1
+    samples_to_train_ratio: 0.01
 
     # not used features
     to_drop: 
-        - 'locdt'
+        -
+        # - 'txkey'
+        # - 'locdt'
+        # - 'iterm'
         # - 'flam1'
         # - 'txkey'
         # - 'etymd'
@@ -90,15 +93,22 @@ log_config:
     test_size: 0.1
 
     vars_with_na:
-        - "etymd"
-        - "mcc"
+        # - "etymd"
+        # - "mcc"
         - "scity"
-        - "csmcu"
-        - "stocn"
-        - "stscd"
-        - "hcefg"
+        # - "csmcu"
+        # - "stocn"
+        # - "stscd"
+        # - "hcefg"
 
     time_transform: "loctm"
+
+    add_na_column: 
+        - "hcefg"
+        - "etymd"
+        - "mcc"
+        - "csmcu"
+        - "stocn"
 
     use_sampling: False
     
@@ -135,7 +145,7 @@ log_config:
         max_depth: 5
         min_child_weight: 3
         colsample_bytree: 1
-        device: "cuda"
+        device: "cpu"
         subsample: 0.6
         n_jobs: -1
 
@@ -249,13 +259,13 @@ cv_config:
         
     
 mlflow_config:
-    experiment_name: 'xgboost'
+    experiment_name: 'feature engineering'
 
     experiment_tags:
         project_name: 'detect credit card fraud'
         mlflow.note/content: 'This is the experiment for xgboost'
 
-    artifact_path: 'xgboost'
+    artifact_path: 'model'
     
-    run_name: 'delete locdt'
+    run_name: 'no delete'
 

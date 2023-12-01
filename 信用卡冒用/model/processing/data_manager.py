@@ -1,13 +1,11 @@
-import typing as t
-from pathlib import Path
-
 import joblib
 import pandas as pd
 from imblearn.pipeline import Pipeline
+from sklearn.model_selection import train_test_split
 
 
 from model import __version__ as _version
-from model.config.core import DATASET_DIR, TRAINED_MODEL_DIR, config, ML_ROOT, ROOT
+from model.config.core import TRAINED_MODEL_DIR, config, ML_ROOT, ROOT
 
 def data_prep():
     df = pd.read_csv(str(ROOT)+config.app_config.training_data)
