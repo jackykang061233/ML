@@ -16,9 +16,7 @@ TRAINED_MODEL_DIR = PACKAGE_ROOT / 'train_models'
 
 # App
 class AppConfig(BaseModel):
-    """
-    Application-level config
-    """
+    """ Application config """
     package_name: str
     training_data: str
     val_data: str
@@ -29,15 +27,18 @@ class AppConfig(BaseModel):
 
 # Model config
 class SmoteConfig(BaseModel):
+    """ Smote config """
     sampling_strategy: float
     k_neighbors: int
 
 class LogisticRegressionConfig(BaseModel):
+    """ Logistic Regression config """
     max_iter: int
     solver: str
     n_jobs: int
 
 class RandomForestConfig(BaseModel):
+    """ Random Forest config """
     n_estimators: int
     bootstrap: bool
     random_state: int
@@ -45,6 +46,7 @@ class RandomForestConfig(BaseModel):
     n_jobs: int
 
 class XgbConfig(BaseModel):
+    """ XGBoost config """
     objective: str
     random_state: int
     scale_pos_weight: float
@@ -61,6 +63,7 @@ class XgbConfig(BaseModel):
     n_jobs: int
 
 class LgbConfig(BaseModel):
+    """ Lightgbm config """
     objective: str
     random_state: int
     device: str
@@ -71,6 +74,7 @@ class LgbConfig(BaseModel):
     min_child_sample: int
 
 class LogConfig(BaseModel):
+    """ Moel Config"""
     target: str
     used_model: str
     samples_to_train_ratio: float
@@ -93,17 +97,20 @@ class LogConfig(BaseModel):
 
     @validator("to_drop", 'vars_with_na', 'add_na_column', pre=True, allow_reuse=True)
     def convert_empty_string_to_none(cls, value):
+        """ Check if these three columns are empty if empty return empty list """
         return [] if value == [''] else value
 
 
 # Cross validation
 class StratifiedKFoldConfig(BaseModel):
+    """ Stratified K-Fold Config"""
     n_splits: int
     shuffle: bool
     random_state: int
 
     
 class RandomForestGridConfig(BaseModel):
+    """ Grid search config for random forest """
     random_forest__criterion: List[str]
     random_forest__n_estimators: List[int]
     random_forest__max_depth: List[Union[None, int]]
@@ -117,7 +124,7 @@ class RandomForestGridConfig(BaseModel):
         return value
     
 class XGboostGridConfig(BaseModel):
-    #xgboost__learning_rate: List[float]
+    """ Grid search config for xgboost """
     xgboost__gamma: List[float]
     xgboost__reg_alpha: List[float]
     xgboost__reg_lambda: List[float]
@@ -130,20 +137,21 @@ class XGboostGridConfig(BaseModel):
 
 
 class CVConfig(BaseModel):
+    """ Cross validation config """
     stratifiedkfold: StratifiedKFoldConfig
     random_forest: RandomForestGridConfig
     xgboost: XGboostGridConfig
     
 # Mlflow        
 class MLflowConfig(BaseModel):
+    """ Mlflow config """
     experiment_name: str
     experiment_tags: Dict[str, str]
     artifact_path: str
     run_name: str
 
 class Config(BaseModel):
-    """Master config object."""
-
+    """config of four major components """
     app_config: AppConfig
     log_config: LogConfig
     mlflow_config: MLflowConfig

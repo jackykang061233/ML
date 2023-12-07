@@ -21,7 +21,7 @@ log_config:
 
     used_model: 'xgboost'
     
-    samples_to_train_ratio: 0.01
+    samples_to_train_ratio: 0.1
 
     # not used features
     to_drop: 
@@ -259,7 +259,7 @@ cv_config:
         
     
 mlflow_config:
-    experiment_name: 'feature engineering'
+    experiment_name: 'xgboost_cv'
 
     experiment_tags:
         project_name: 'detect credit card fraud'
