@@ -1,5 +1,8 @@
 # AI-CUP-2023-E.SUN
 
+# Background
+This is the code for the competition [AI-CUP-2023-E.SUN](https://tbrain.trendmicro.com.tw/Competitions/Details/31)
+
 # 基本資訊
 * 訓練資料為training.csv(在preprocess時為function feature_transform的input)
 * 預測資料為predict.csv(在predict時為function prediction的input)
