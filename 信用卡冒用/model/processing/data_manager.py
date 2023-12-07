@@ -2,10 +2,11 @@ import joblib
 import pandas as pd
 from imblearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split
+from model.exception import PipelineNotExistException
 
 
 from model import __version__ as _version
-from model.config.core import TRAINED_MODEL_DIR, config, ML_ROOT, ROOT
+from model.config.core import TRAINED_MODEL_DIR, config, ML_ROOT, ROOT, PACKAGE_ROOT
 
 def data_prep():
     """ 
@@ -110,6 +111,10 @@ def save_pipeline(*, pipeline_to_save: Pipeline) -> None:
     save_path = TRAINED_MODEL_DIR / save_file_name
     joblib.dump(pipeline_to_save, save_path)
 
+    newest_model = PACKAGE_ROOT / 'newest_model.txt'
+    with open(newest_model, 'w') as f:
+        f.write(save_file_name)
+
 def load_pipeline(*, file_name: str, mlflow: bool = False) -> Pipeline:
     """
     load the trained pipeline
@@ -125,7 +130,11 @@ def load_pipeline(*, file_name: str, mlflow: bool = False) -> Pipeline:
         file_path = ML_ROOT / file_name
     else:
         file_path = TRAINED_MODEL_DIR / file_name
-    trained_model = joblib.load(filename=file_path)
+    try:
+        trained_model = joblib.load(filename=file_path)
+    except FileNotFoundError:
+        raise PipelineNotExistException('pipeline not exist')
+
     return trained_model
     
 

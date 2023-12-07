@@ -56,12 +56,15 @@ def mlflow_train(train_type='train', models=models):
     
     with mlflow.start_run(run_name=config.mlflow_config.run_name) as run:
         if train_type == 'train':
+            print('TRAIN MODE')
             pipe = pipeline(X_train.columns)
             model = pipe.fit(X_train, y_train)
         elif train_type == 'grid_search':
+            print('GRID SEARCH MODE')
             model, params, pipe = grid_search_cv(X_train, y_train)
             model = model.fit(X_train, y_train)
         elif train_type == 'cross_validation':
+            print('CROSS VALIDATION MODE')
             accuracy_lst, precision_lst, recall_lst, f1_lst, auc_lst = cross_validation(X_train, y_train)
 
             accuracy_score = np.mean(accuracy_lst)

@@ -36,12 +36,15 @@ def train(train_type='train'):
     print(f'Testing size {len(X_test)}')
 
     if train_type == 'train':
+        print('TRAIN MODE')
         pipe = pipeline(X_train.columns)
         model = pipe.fit(X_train, y_train)
     elif train_type == 'grid_search':
+        print('GRID SEARCH MODE')
         model, params, pipe = grid_search_cv(X_train, y_train)
         model.fit(X_train, y_train)
     elif train_type == 'cross_validation':
+        print('CROSS VALIDATION MODE')
         cross_validation(X_train, y_train)
     else:
         raise InvalidTrainTypeException('Invalid! Train type is either train, grid_search, or cross_validation')
