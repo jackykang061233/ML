@@ -1,0 +1,271 @@
+app_config:
+    # Overview
+    package_name: "model-training"
+    
+    # Training data
+    training_data: "/data/training.csv"
+
+    val_data: "/data/public.csv"
+
+    test_data: '/data/private_1_processed.csv'
+
+    # pipeline_save_file: "logistic_regression_output_v"
+    #pipeline_save_file: "random_forest_output_v"
+    pipeline_save_file: "xgboost_output_v"
+    #pipeline_save_file: "lightgbm_output_v"
+
+    predict_path: "/data/prediction.csv"
+    
+log_config:
+    target: "label"
+
+    used_model: 'xgboost'
+    
+    samples_to_train_ratio: 0.1
+
+    # not used features
+    to_drop: 
+        -
+        # - 'txkey'
+        # - 'locdt'
+        # - 'iterm'
+        # - 'flam1'
+        # - 'txkey'
+        # - 'etymd'
+        # - 'stocn'
+        # - 'csmcu'
+        # - 'locdt'
+        # - 'loctm'
+        # - 'acqic'
+        # - 'flg_3dsmk'
+        # - 'flbmk'
+        # - 'iterm'
+        # - 'hcefg'
+        # - 'csmam'
+        # - 'chid'
+        # - 'stscd'
+
+        # - "flam1"
+        # - "txkey"
+        # - "chid"
+        # - "cano"
+        # - "mchno"
+        # - "acqic"
+        
+    object_features:
+        - "txkey"
+        - "chid"
+        - "cano"
+        - "mchno"
+        - "acqic"
+    
+    numeric_features:
+        - "locdt"
+        - "loctm"
+        - "conam"
+        - "iterm"
+        - "csmam"
+        - "flam1"
+
+    categorical_features:
+        - "etymd"
+        - "mcc"
+        - "ecfg"
+        - "scity"
+        - "ovrlt"
+        - "csmcu"
+        - "txkey"
+        - "chid"
+        - "cano"
+        - "mchno"
+        - "acqic"
+        - "contp"
+        - "bnsfg"
+        - "stocn"
+        - "stscd"
+        - "flbmk"
+        - "hcefg"
+        - "flg_3dsmk"
+ 
+    
+    # For train test split
+    random_state: 42
+    test_size: 0.1
+
+    vars_with_na:
+        # - "etymd"
+        # - "mcc"
+        - "scity"
+        # - "csmcu"
+        # - "stocn"
+        # - "stscd"
+        # - "hcefg"
+
+    time_transform: "loctm"
+
+    add_na_column: 
+        - "hcefg"
+        - "etymd"
+        - "mcc"
+        - "csmcu"
+        - "stocn"
+
+    use_sampling: False
+    
+    # smote hyperparameters
+    smote:
+        sampling_strategy: 1
+        k_neighbors: 4
+        
+
+    # logistic hyperparameters
+    logistic:
+        max_iter: 5000
+        solver: "saga"
+        n_jobs: -1
+
+    # random forest hyperparameters
+    random_forest:
+        n_estimators: 250
+        bootstrap: True
+        random_state: 42
+        class_weight: 
+            0: 1
+            1: 1
+        n_jobs: -1
+    xgb:
+        objective: "binary:logistic"
+        random_state: 42
+        scale_pos_weight: 3
+        n_estimators: 250
+        learning_rate: 0.1
+        gamma: 0.05
+        reg_alpha: 0
+        reg_lambda: 0
+        max_depth: 5
+        min_child_weight: 3
+        colsample_bytree: 1
+        device: "cpu"
+        subsample: 0.6
+        n_jobs: -1
+
+        # learning_rate: 0.1
+        # subsample: 0.8
+        # reg_lambda: 0.1
+        # reg_alpha: 0.0
+        # n_estimators: 250
+        # min_child_weight: 1
+        # max_depth: 3
+        # gamma: 0.0
+        # colsample_bytree: 1.0
+        # n_jobs: -1
+        # device: "cpu"
+        # objective: "binary:logistic"
+        # random_state: 42
+        # scale_pos_weight: 3
+        
+        # objective: "binary:logistic"
+        # random_state: 42
+        # scale_pos_weight: 3
+        # subsample: 0.8
+        # reg_lambda: 0.0
+        # reg_alpha: 0.01
+        # n_estimators: 150
+        # min_child_weight: 1
+        # max_depth: 3
+        # learning_rate: 0.05
+        # gamma: 0.05
+        # colsample_bytree: 1
+        # device: "cuda"
+        # n_jobs: -1
+
+    lgb:
+        objective: 'binary'
+        random_state: 42
+        device: "cpu"
+        n_estimators: 200
+        n_jobs: -1
+        # class_weight: 
+        #     0: 99
+        #     1: 1
+        class_weight: 
+            0: 1
+            1: 1
+        learning_rate: 0.05
+        min_child_sample: 25
+
+        
+    precision_recall_threshold: 0.5
+
+    
+cv_config:
+    stratifiedkfold:
+        n_splits: 5
+        shuffle: True
+        random_state: 40
+    random_forest:
+        random_forest__criterion: 
+            - 'gini'
+            - 'entropy'
+            - 'log_loss'
+        random_forest__n_estimators: 
+            - 200
+            - 250
+            - 300
+        random_forest__max_depth: 
+            - 
+            - 10 
+            - 20
+        random_forest__min_samples_leaf:
+            - 1
+            - 2
+            - 4
+        random_forest__min_samples_split:
+            - 2
+            - 4
+            - 8
+    xgboost:
+        xgboost__learning_rate: 
+            - 0.1
+            - 0.05
+        xgboost__gamma: 
+            - 0
+            - 0.05
+            - 0.1
+        xgboost__reg_alpha: 
+            - 0
+            - 0.01
+        xgboost__reg_lambda: 
+            - 0
+            - 0.1
+        xgboost__max_depth: 
+            - 3
+            - 5
+        xgboost__min_child_weight: 
+            - 1
+            - 3
+        xgboost__subsample:
+            - 1
+            - 0.8
+            - 0.6   
+        xgboost__colsample_bytree:
+            - 1
+            - 0.8
+            - 0.6
+        xgboost__n_estimators: 
+            - 150
+            - 250
+   
+        
+    
+mlflow_config:
+    experiment_name: 'xgboost_cv'
+
+    experiment_tags:
+        project_name: 'detect credit card fraud'
+        mlflow.note/content: 'This is the experiment for xgboost'
+
+    artifact_path: 'model'
+    
+    run_name: 'no delete'
+
