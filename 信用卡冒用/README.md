@@ -12,10 +12,10 @@ This is the code for the competition [AI-CUP-2023-E.SUN](https://tbrain.trendmic
 * prediction 
 
 # File usuage:
-model/: Model training and prediction
+## model/: Model training, prediction, feature engineering, config, basically every detail of the model
 train.py: Train the model using preprocessed data.
 predict.py: Use the trained model from train.py to make predictions and store the final predictions in final_prediction.csv.
-test/: Unit tests for every basic function
+## test/: Unit tests for every basic function
 test_validation and test_prediction still produce errors.
 requirements.txt: Required packages.
 main.py: Execute the entire training and prediction process.
@@ -26,11 +26,8 @@ main.py: Execute the entire training and prediction process.
 # Install required packages
 $ pip install -r requirements.txt 
 
-# Execute data preprocessing
-$ python Preprocess/pipeline.py 
-
 # Training and inference
-$ python main.py
+$ python main.py train grid_search
 ```
 
 # 執行流程:
