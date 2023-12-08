@@ -28,9 +28,9 @@ This is the code for the competition [AI-CUP-2023-E.SUN](https://tbrain.trendmic
 * test/: Unit tests for the code
   * WARNING: test_validation and test_prediction still produce errors
 * requirements.txt: required packages
-* main.py: execute the training process or make prediction, there are two args\\
+* main.py: execute the training process or make prediction, there are two args \
   First argument
-  * train
+  * train \
     Second argument
     * train
     * cross_validation
