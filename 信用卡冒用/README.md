@@ -34,17 +34,17 @@ This is the code for the competition [AI-CUP-2023-E.SUN](https://tbrain.trendmic
     Second argument
     * train
     * cross_validation
-    * grid_search
+    * grid_search\
   First argument
-  * mlflow_train
+  * mlflow_train\
     Second argument
     * train
     * cross-validation
-    * grid-search
+    * grid-search\
   First argument  
-  * predict
+  * predict\
     Second argument
-    * the name of pipeline, e.g. xgboost_output_v0.0.1.pkl
+    * the name of pipeline, e.g. xgboost_output_v0.0.1.pkl\
    NOTE: Second argument can be ignored, then the default value will be used
 
 # Execution Process:
