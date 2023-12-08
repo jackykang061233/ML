@@ -13,12 +13,12 @@ This is the code for the competition [AI-CUP-2023-E.SUN](https://tbrain.trendmic
 
 # File usuage:
 * model/: Model training, prediction, feature engineering, config, basically every detail of the model
-train.py: Train the model using preprocessed data.
-predict.py: Use the trained model from train.py to make predictions and store the final predictions in final_prediction.csv.
+  * train.py: Train the model using preprocessed data.
+  * predict.py: Use the trained model from train.py to make predictions and store the final predictions in final_prediction.csv.
 * test/: Unit tests for every basic function
-test_validation and test_prediction still produce errors.
-requirements.txt: Required packages.
-main.py: Execute the entire training and prediction process.
+  * test_validation and test_prediction still produce errors.
+* requirements.txt: Required packages.
+* main.py: Execute the entire training and prediction process.
 
 # Execution Process:
 
