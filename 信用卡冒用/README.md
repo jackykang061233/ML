@@ -17,7 +17,7 @@ This is the code for the competition [AI-CUP-2023-E.SUN](https://tbrain.trendmic
     * train
     * cross-validation
     * grid-search 
-  * training_mlflow.py: train the model and log with [MLFLOW](https://mlflow.org/docs/latest/index.html). There are three train types:
+  * training_mlflow.py: train the model and log with [mlflow](https://mlflow.org/docs/latest/index.html). There are three train types:
     * train
     * cross-validation
     * grid-search 
