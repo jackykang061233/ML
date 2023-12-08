@@ -19,9 +19,7 @@ trained_models/.ipynb_checkpoints/
 trained_models/logistic/.ipynb_checkpoints/
 tests/.ipynb_checkpoints/
 tests/__pycache__/
-信用卡冒用/tests/__pycache__/__init__.cpython-310.pyc
-信用卡冒用/tests/__pycache__/conftest.cpython-310-pytest-7.4.3.pyc
-信用卡冒用/tests/__pycache__/test_transform.cpython-310-pytest-7.4.3.pyc
+*.pyc 
 
 /MLFlow
 /mlenv
