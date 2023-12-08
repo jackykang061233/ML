@@ -10,7 +10,7 @@ This is the code for the competition [AI-CUP-2023-E.SUN](https://tbrain.trendmic
 * cross-validation
 * grid-search
 * prediction\
-## NOTE: Due to restrictions, the original dataset cannot be made publicly available
+### NOTE: Due to restrictions, the original dataset cannot be made publicly available
 
 # File usuage:
 * model/: Model training, prediction, feature engineering, config, basically every detail of the model
