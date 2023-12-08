@@ -57,16 +57,3 @@ $ pip install -r requirements.txt
 # Training and inference
 $ python main.py train grid_search
 ```
-
-# 執行流程:
-
-```
-# 安裝所需套件
-$ pip install -r requirements.txt 
-
-# 執行資料前處理
-$ python Preprocess/pipeline.py 
-
-# training and inference
-$ python main.py
-```
