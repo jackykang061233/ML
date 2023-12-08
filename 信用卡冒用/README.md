@@ -13,16 +13,22 @@ This is the code for the competition [AI-CUP-2023-E.SUN](https://tbrain.trendmic
 
 # File usuage:
 * model/: Model training, prediction, feature engineering, config, basically every detail of the model
-  * training.py: Train the model using preprocessed data.
-  * training_mlflow.py: 
-  * predict.py: Use the saved trained model pipeline make predictions and store in /submissions
+  * training.py: train the model. There are three train types:
+    * train
+    * cross-validation
+    * grid-search 
+  * training_mlflow.py: train the model. There are three train types:
+    * train
+    * cross-validation
+    * grid-search 
+  * predict.py: use the saved trained model pipeline make predictions and store in /submissions
   * pipeline.py: the sklearn pipeline of feature engineering and model
   * evaluate.py: evaluate the trained model with 5 metrics: accuracy, precision, recall, f1-score, and auc score.
   * config.yml: all the training details, including where the data are the configuration for the feature engineering, hyperparameters for the model, etc....
 * test/: Unit tests for every basic function
-  * test_validation and test_prediction still produce errors
-* requirements.txt: Required packages
-* main.py: Execute the entire training and prediction process
+  * WARNING: test_validation and test_prediction still produce errors
+* requirements.txt: required packages
+* main.py: execute the entire training and prediction process
 
 # Execution Process:
 
