@@ -20,6 +20,19 @@ test_validation and test_prediction still produce errors.
 requirements.txt: Required packages.
 main.py: Execute the entire training and prediction process.
 
+# Execution Process:
+
+```
+# Install required packages
+$ pip install -r requirements.txt 
+
+# Execute data preprocessing
+$ python Preprocess/pipeline.py 
+
+# Training and inference
+$ python main.py
+```
+
 # 執行流程:
 
 ```
