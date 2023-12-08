@@ -25,10 +25,27 @@ This is the code for the competition [AI-CUP-2023-E.SUN](https://tbrain.trendmic
   * pipeline.py: the sklearn pipeline of feature engineering and model
   * evaluate.py: evaluate the trained model with 5 metrics: accuracy, precision, recall, f1-score, and auc score.
   * config.yml: all the training details, including where the data are the configuration for the feature engineering, hyperparameters for the model, etc....
-* test/: Unit tests for every basic function
+* test/: Unit tests for the code
   * WARNING: test_validation and test_prediction still produce errors
 * requirements.txt: required packages
-* main.py: execute the entire training and prediction process
+* main.py: execute the training process or make prediction, there are two args
+  First argument
+  * train
+    Second argument
+    * train
+    * cross_validation
+    * grid_search
+  First argument
+  * mlflow_train
+    Second argument
+    * train
+    * cross-validation
+    * grid-search
+  First argument  
+  * predict
+    Second argument
+    * the name of pipeline, e.g. xgboost_output_v0.0.1.pkl
+   NOTE: Second argument can be ignored, then the default value will be used
 
 # Execution Process:
 
